@@ -1,0 +1,47 @@
+name: Multibar
+options:
+  bundleIdPrefix: io.github.malenitaa
+  deploymentTarget:
+    macOS: "15.0"
+  createIntermediateGroups: true
+
+packages:
+  MultibarCore:
+    path: Core
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "15.0"
+    ENABLE_HARDENED_RUNTIME: YES
+    GENERATE_INFOPLIST_FILE: YES
+    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "0.1"
+    CODE_SIGN_STYLE: Automatic
+
+targets:
+  Multibar:
+    type: application
+    platform: macOS
+    sources:
+      - path: App
+    dependencies:
+      - package: MultibarCore
+        product: MultibarCore
+      - package: MultibarCore
+        product: MultibarPersistence
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.malenitaa.Multibar
+        PRODUCT_NAME: Multibar
+        INFOPLIST_KEY_LSUIElement: YES   # solo barra de menú, sin ícono en el Dock
+        INFOPLIST_KEY_CFBundleDisplayName: Multibar
+        INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.utilities"
+
+schemes:
+  Multibar:
+    build:
+      targets:
+        Multibar: all
+    run:
+      config: Debug

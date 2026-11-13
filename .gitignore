@@ -1,0 +1,23 @@
+# Xcode
+build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# XcodeGen: el .xcodeproj se genera desde project.yml
+*.xcodeproj/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Secretos y archivos locales
+.env
+*.local.*
+
+# Doc interna de mantenimiento
+docs/interno/
+
+# macOS
+.DS_Store
