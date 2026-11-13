@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      # 1. Lint y formato (incluye el chequeo de que Core no importe AppKit/SwiftUI, ADR 0002).
+      - name: Lint
+        run: ./scripts/lint.sh
+
+      # 2. Unitarios + integración del almacén JSON (directorio temporal).
+      - name: Tests
+        run: swift test --package-path Core
+
+      # La app tiene que compilar aunque no haya UI tests (deuda anotada en docs/DISENO.md).
+      - name: Build de la app
+        run: |
+          brew install xcodegen
+          xcodegen generate
+          xcodebuild -project Multibar.xcodeproj -scheme Multibar -configuration Debug \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO build

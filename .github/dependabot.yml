@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "swift"
+    directory: "/Core"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7        # una versión nueva espera una semana antes de la PR
+    groups:
+      menores:
+        update-types: ["minor", "patch"]
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
