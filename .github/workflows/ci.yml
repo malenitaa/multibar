@@ -13,7 +13,7 @@ jobs:
     runs-on: macos-15
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       # 1. Lint y formato (incluye el chequeo de que Core no importe AppKit/SwiftUI, ADR 0002).
       - name: Lint
