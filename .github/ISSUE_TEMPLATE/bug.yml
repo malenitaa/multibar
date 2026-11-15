@@ -1,0 +1,62 @@
+name: Bug
+description: Something behaves differently from what the README or the spec says.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. Please check that nothing you paste here is something you
+        would not want public. Security problems do not go here: use the Security tab.
+  - type: textarea
+    id: what-happens
+    attributes:
+      label: What happens
+      description: What you see, including any message Usherette shows.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should happen
+      description: If you know the acceptance criterion in SPEC.md (AC-n), mention it.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to reproduce
+      placeholder: |
+        1. Open settings
+        2. …
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: "27.2"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Usherette version or commit
+      placeholder: "0.1 or a commit hash"
+    validations:
+      required: true
+  - type: dropdown
+    id: display
+    attributes:
+      label: Display the menu bar is on
+      options:
+        - Built-in display with a notch
+        - Built-in display without a notch
+        - External display
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: more
+    attributes:
+      label: Anything else
+      description: Which menu bar apps are involved, whether hiding is on, whether Accessibility is allowed.

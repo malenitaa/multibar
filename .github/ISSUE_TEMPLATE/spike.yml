@@ -1,0 +1,37 @@
+name: Spike
+description: A question to answer by investigating, with a time limit. The output is knowledge, not final code.
+title: "[spike] "
+labels: ["spike"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question to answer
+    validations:
+      required: true
+  - type: input
+    id: timebox
+    attributes:
+      label: Timebox
+      description: When it runs out, what was learned is written down, even if unfinished.
+      placeholder: "2 hours"
+    validations:
+      required: true
+  - type: textarea
+    id: answer
+    attributes:
+      label: What counts as an answer
+      description: What has to happen to say "yes, it can be done" or "no, and why".
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps
+      placeholder: |
+        - [ ] …
+  - type: textarea
+    id: findings
+    attributes:
+      label: Findings
+      description: Filled in when closing. If it changes a decision, that goes into an ADR linked here.
