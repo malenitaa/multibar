@@ -5,9 +5,9 @@ updates:
     schedule:
       interval: "weekly"
     cooldown:
-      default-days: 7        # una versión nueva espera una semana antes de la PR
+      default-days: 7        # a new version waits a week before its PR
     groups:
-      menores:
+      minor-and-patch:
         update-types: ["minor", "patch"]
   - package-ecosystem: "github-actions"
     directory: "/"

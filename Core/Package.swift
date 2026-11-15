@@ -2,18 +2,18 @@
 import PackageDescription
 
 let package = Package(
-    name: "MultibarCore",
+    name: "UsheretteCore",
     platforms: [.macOS(.v15)],
     products: [
-        .library(name: "MultibarCore", targets: ["MultibarCore"]),
-        .library(name: "MultibarPersistence", targets: ["MultibarPersistence"]),
+        .library(name: "UsheretteCore", targets: ["UsheretteCore"]),
+        .library(name: "UsherettePersistence", targets: ["UsherettePersistence"]),
     ],
     targets: [
-        // Dominio y puertos. Solo Foundation: nada de AppKit ni SwiftUI (ADR 0002).
-        .target(name: "MultibarCore"),
-        // Adaptador de configuración en JSON.
-        .target(name: "MultibarPersistence", dependencies: ["MultibarCore"]),
-        .testTarget(name: "MultibarCoreTests", dependencies: ["MultibarCore"]),
-        .testTarget(name: "MultibarPersistenceTests", dependencies: ["MultibarPersistence"]),
+        // Domain and ports. Foundation only: no AppKit, no SwiftUI (ADR 0002).
+        .target(name: "UsheretteCore"),
+        // Adapter: configuration as JSON.
+        .target(name: "UsherettePersistence", dependencies: ["UsheretteCore"]),
+        .testTarget(name: "UsheretteCoreTests", dependencies: ["UsheretteCore"]),
+        .testTarget(name: "UsherettePersistenceTests", dependencies: ["UsherettePersistence"]),
     ]
 )

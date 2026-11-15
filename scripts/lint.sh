@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Lint y formato con swift-format (viene con el toolchain de Swift 6, sin dependencias).
-# Uso: ./scripts/lint.sh        → revisa
-#      ./scripts/lint.sh --fix  → formatea en el lugar
+# Lint and format with swift-format (ships with the Swift 6 toolchain, no dependencies).
+# Usage: ./scripts/lint.sh        → check
+#        ./scripts/lint.sh --fix  → format in place
 set -euo pipefail
 cd "$(dirname "$0")/.."
 if [[ "${1:-}" == "--fix" ]]; then
@@ -9,8 +9,13 @@ if [[ "${1:-}" == "--fix" ]]; then
 else
   swift format lint --strict --recursive Core/Sources Core/Tests App
 fi
-# El dominio no importa frameworks de UI ni del sistema (ADR 0002).
+# The domain does not import UI or system frameworks (ADR 0002).
 if grep -rEn "import (AppKit|SwiftUI|ServiceManagement|ApplicationServices)" Core/Sources; then
-  echo "error: Core/Sources importa un framework que no corresponde (ADR 0002)" >&2
+  echo "error: Core/Sources imports a framework it must not depend on (ADR 0002)" >&2
+  exit 1
+fi
+# Usherette never talks to the network (SPEC.md, section 4).
+if grep -rEn "URLSession|NWConnection|CFNetwork|import Network" Core/Sources App; then
+  echo "error: networking API referenced; Usherette must not connect to anything (SPEC.md §4)" >&2
   exit 1
 fi
