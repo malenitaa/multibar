@@ -22,9 +22,8 @@ It is built in two steps:
 - **v1 — launcher groups.** Groups hold apps, files, folders and URLs to open. No special
   permissions.
 - **v2 — organizer.** Other apps' icons are hidden from the main bar and reached from a
-  group. By default that uses macOS's own menu bar setting and no permissions; an opt-in
-  module shows the real icons inside the group and asks for Accessibility. A spike (issue #8)
-  comes first.
+  group. Hiding them needs no permissions; an opt-in module opens their real menus from the
+  group and asks for Accessibility. Spike #8 showed both work on macOS 27.2.
 
 Section 7 lists what comes after.
 
@@ -41,9 +40,9 @@ Section 7 lists what comes after.
 8. Optionally launch at login.
 
 ## 3. What it does not do (on purpose)
-- **By default it does not touch other apps' icons.** Hiding them is left to macOS's own
-  setting. Showing them inside a group is an opt-in module (ADR 0003). It never captures the
-  screen.
+- **By default it does not read or control other apps' icons.** It can hide them, which needs
+  no permission. Opening their menus from a group is an opt-in module (ADR 0003). It never
+  captures the screen.
 - **It does not run shell commands.** For "anything else" there are macOS Shortcuts
   (`shortcuts://`), which the user can see and control. Running commands from a config file
   opens a door that does not need to be open.
@@ -111,8 +110,8 @@ written when each stage is next.
   up in the strip of their group, where clicking one opens its own menu. This is the opt-in
   module (Accessibility). Without Screen Recording the strip shows each app's icon rather
   than a picture of its menu bar item, so a live badge on the original is not visible.
-  Without the module, icons are hidden with macOS's own setting and the strip launches the
-  apps. Spike #8 first.
+  Without the module, Usherette still hides the icons and the strip launches the apps.
+  Spike #8 (`docs/spikes/0008-organizer.md`) showed this works on macOS 27.2.
 - **Keyboard.** A hotkey per group, and search across everything in the groups.
 - **Profiles and triggers.** Named setups ("Working", "Focus", "Gaming") that change what the
   bar shows, switched by hand, by hotkey or automatically. With the module a profile covers
@@ -129,7 +128,7 @@ design; nothing is copied.
 | The reference does | Usherette | Notes |
 |---|---|---|
 | Combine related items into one group | **Yes, v1** | The core of Usherette; groups also hold things to launch, which the reference does not |
-| Hide other apps' icons | Yes | Through macOS's own setting, without permissions |
+| Hide other apps' icons | Yes | Without permissions (spike #8) |
 | Show hidden icons on demand | Opt-in module | Needs Accessibility; off by default (ADR 0003). Shown in the group's strip |
 | Work without Screen Recording | Yes, always | No feature may require it (ADR 0003) |
 | A bar under the menu bar holding the hidden icons | Yes, per group | Each group opens its own strip, instead of one bar for everything |

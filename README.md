@@ -4,8 +4,8 @@
 
 Usherette lets you create your own groups in the menu bar. Each group is an icon you choose (a
 symbol or an emoji) that opens a strip with whatever belongs to that context: apps, files,
-folders, a VM, a shortcut, a website. Hide the individual icons with macOS's own setting and
-keep one icon per context.
+folders, a VM, a shortcut, a website. Hide the individual icons and keep one icon per
+context.
 
 ```
  ┌───────────── menu bar ─────────────┐
@@ -41,9 +41,8 @@ hidden. Usherette organizes it by *context*:
 
 **v2 — organizer** (under investigation, see
 [#8](https://github.com/malenitaa/usherette/issues/8))
-- Hide other apps' icons with macOS's own menu bar setting and reach those apps from a group,
-  with no permissions.
-- Optional: show other apps' real menu bar icons inside a group. This one module asks for
+- Hide other apps' icons and reach those apps from a group, with no permissions.
+- Optional: open other apps' real menu bar menus from a group. This one module asks for
   Accessibility and is off unless you turn it on.
 
 **Later**

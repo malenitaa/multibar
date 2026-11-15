@@ -39,6 +39,8 @@ timeline
 What is in and out compared with the reference product is in the parity table of `SPEC.md` §7.
 
 ## What was done (latest first)
+- 2026-11-15 · Spike #8 run on macOS 27.2: the main idea works with Accessibility alone;
+  hiding needs no permission. Results in `docs/spikes/0008-organizer.md`.
 - 2026-11-15 · Scope set against Bartender 7 and Pro: parity table in the spec, roadmap
   extended to stages 6–9. ADR 0003 rewritten: no permissions by default, Accessibility only in
   an opt-in module, never Screen Recording.
@@ -53,8 +55,8 @@ What is in and out compared with the reference product is in the parity table of
   license, 8 issues.
 
 ## What is next
-1. #8 (spike): the gate for the main idea. Can the opt-in module move other apps' icons out
-   of the bar and show them in a group's strip with Accessibility alone?
+1. What spike #8 left open: moving icons programmatically, computing the hiding width, and
+   testing Teams and macOS 26.
 2. #2 (persistence) and #1 (groups in the bar): both `ready`, the base for everything else.
 
 ## Decisions taken (open to veto)
@@ -92,5 +94,6 @@ What is in and out compared with the reference product is in the parity table of
 | Spec, criteria and parity table | `SPEC.md` |
 | Decisions | `docs/adr/` |
 | Internal design and design rules | `docs/DESIGN.md` |
+| Spike results | `docs/spikes/` |
 | For users and contributors | `README.md`, `CONTRIBUTING.md`, `SECURITY.md` |
 | Issues | https://github.com/malenitaa/usherette/issues |

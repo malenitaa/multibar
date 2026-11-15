@@ -40,8 +40,11 @@ explained before the system prompt appears.
   isolated behind a port, so what it does with the permission can be read in one place.
 - Code that uses Accessibility lives only in the module's adapter; `./scripts/lint.sh` will
   check that nothing else imports it once the module exists.
-- Whether the module can do its job on current macOS with Accessibility alone is the subject
-  of spike #8. If it cannot, the answer is to drop the module, not to add Screen Recording.
+- Spike #8 (`docs/spikes/0008-organizer.md`) showed on macOS 27.2 that the module can do its
+  job with Accessibility alone, and that hiding icons needs no permission at all. If a later
+  macOS breaks that, the answer is to drop the module, not to add Screen Recording.
+- macOS's own "Allow in the Menu Bar" setting removes an icon completely; an app switched off
+  there cannot be reached from a group. It is for icons the user never wants.
 - Sandboxing stays possible for the default install; not decided here.
 
 ## Alternatives considered
