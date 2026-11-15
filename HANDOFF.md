@@ -39,6 +39,8 @@ timeline
 What is in and out compared with the reference product is in the parity table of `SPEC.md` §7.
 
 ## What was done (latest first)
+- 2026-11-15 · The app notices when macOS draws none of its icons, says so in the settings
+  window and opens it. The cause is not known; what is known is in the spike notes.
 - 2026-11-15 · Clicking the ‹ marker hides the icons; the group menu can show and hide them;
   the settings window follows the desktop in use. Found that macOS has its own « overflow.
 - 2026-11-15 · #21: a group opens as a strip of icons under the menu bar instead of a text
@@ -106,6 +108,9 @@ What is in and out compared with the reference product is in the parity table of
   pressing controls through Accessibility miss bugs that only real mouse clicks show (the
   strip not closing on a second click was one); post real click events when checking, and
   capture the whole menu bar, not only the right of the notch.
+- **Unexplained: macOS stopped drawing Usherette's icons** after a long sleep, for the copy in
+  `build/` only. The advice shown to the user (check the switch, turn it off and on) is a guess
+  that has not been seen to work. See `docs/spikes/0008-organizer.md`.
 - Not checked: that the settings window no longer makes macOS switch desktops. It needs a
   person with more than one desktop.
 - Hiding works only on a display with a notch.

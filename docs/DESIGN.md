@@ -99,6 +99,13 @@ something goes, it is not yet clear what it is.
   in view. Each drag blocks the main thread for under a second.
 - **Opening a hidden icon:** `OpenMenuBarIcon` reveals, waits for the icon, presses it through
   `AccessibilityMenuBarIcons`, waits for that app's new window to go away, and hides again.
+- **When macOS draws none of our icons:** it happens (see the spike notes) and the app is not
+  told. `MenuBarController.groupIconsAreShown` looks at whether the group icons' windows were
+  laid out; `AppModel.checkIconsAreShown` runs it at launch, on wake and when the settings
+  window comes forward, and brings up the settings window with an explanation, since without
+  icons there is no other way in.
+- **Use a copy outside the build folder for daily use** (`~/Applications/Usherette.app`):
+  rebuilding replaces the files of a copy that is running from `build/`.
 - **Showing and hiding:** clicking the ‹ marker puts the icons away; the group's right-click
   menu has "Show Hidden Icons" and "Hide Icons Again"; the settings window has the same switch.
 - **Desktops:** the settings window moves to the desktop in use when shown

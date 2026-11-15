@@ -9,6 +9,9 @@ struct SettingsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+            if model.iconsBlockedByMacOS {
+                BlockedIconsNotice()
+            }
             if let notice = model.notice {
                 Label(notice, systemImage: "exclamationmark.triangle")
                     .foregroundStyle(.orange)
@@ -32,6 +35,7 @@ struct SettingsView: View {
         .onAppear { model.refreshMenuBarApps() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             model.refreshMenuBarApps()
+            model.checkIconsAreShown()
         }
     }
 
@@ -70,6 +74,31 @@ struct SettingsView: View {
             name = ""
             iconText = ""
         }
+    }
+}
+
+/// Shown when macOS is not drawing any of Usherette's icons.
+private struct BlockedIconsNotice: View {
+    /// The Menu Bar pane of System Settings.
+    private static let menuBarSettings = URL(string: "x-apple.systempreferences:com.apple.ControlCenter-Settings.extension")
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("macOS is not showing Usherette's icons in the menu bar.", systemImage: "exclamationmark.triangle")
+                .foregroundStyle(.orange)
+            Text(
+                "Open System Settings, go to Menu Bar and check that Usherette is allowed. "
+                    + "If it already is, switch it off and on again, then quit and reopen Usherette."
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+            Button("Open Menu Bar Settings…") {
+                if let url = Self.menuBarSettings { NSWorkspace.shared.open(url) }
+            }
+            .accessibilityIdentifier("open-menu-bar-settings")
+        }
+        .accessibilityIdentifier("blocked-icons-notice")
     }
 }
 

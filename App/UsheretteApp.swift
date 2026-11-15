@@ -33,11 +33,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         )
         model.onGroupsChange = { [weak model] in menuBar.show(model?.configuration.groups ?? []) }
         model.onProblem = { settings.show() }
+        model.groupIconsAreShown = { menuBar.groupIconsAreShown }
         self.model = model
         self.menuBar = menuBar
         self.settings = settings
 
         model.load()
+        model.checkIconsAreShown()
+        // Waking up is when macOS has been seen to stop drawing an app's icons.
+        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { _ in
+            Task { @MainActor in model.checkIconsAreShown() }
+        }
         // With no groups there is no icon to click, so the window is the only way in.
         if model.configuration.groups.isEmpty || model.notice != nil || model.errorMessage != nil {
             settings.show()

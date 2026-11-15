@@ -52,6 +52,15 @@ final class MenuBarController: NSObject {
         statusItems = groups.reversed().map(makeStatusItem)
     }
 
+    /// Whether macOS is drawing the group icons. `nil` when there are no groups to judge by.
+    ///
+    /// macOS can refuse to show an app's menu bar items; the app is not told. The items still
+    /// exist, but their windows are never laid out: no height, no place on screen.
+    var groupIconsAreShown: Bool? {
+        guard !statusItems.isEmpty else { return nil }
+        return statusItems.contains { ($0.button?.window?.frame.height ?? 0) > 0 }
+    }
+
     /// A status item macOS has not seen before goes to the left end of the bar, which is the
     /// side the marker hides. Seeding a small position sends a new group to the right end
     /// instead. macOS only reads this the first time it sees a name; after that it remembers

@@ -73,7 +73,23 @@ is moving icons programmatically.
 - Other apps' icons were dragged this time (a usage meter, Maccy, Passwords), both ways,
   several times, ending in the original order.
 
+## macOS can stop drawing an app's icons (2026-11-15, not explained)
+After the Mac slept for some hours with Usherette hiding icons, none of Usherette's icons were
+drawn any more: not the running copy's, not a freshly launched one's. What was established:
+- The same build copied to another folder, with the same bundle identifier, shows its icons.
+  So does a copy with another identifier. Only the app at its original path is affected.
+- The switch for Usherette in System Settings → Menu Bar read on, then off, then on again over
+  twenty minutes while nobody touched it; it does not explain the state by itself.
+- Nothing readable in the app's preferences differs. Rebuilding in place changes nothing.
+- An affected status item still exists and says `isVisible == true`, but its window is never
+  laid out: frame `0,0,w×0`, not visible. That is how `MenuBarController.groupIconsAreShown`
+  detects it.
+- Not established: what triggers it. Candidates are the wide marker no longer fitting when the
+  display configuration changes on wake, and the app's files being replaced by a rebuild while
+  it was running. A short eviction of an oversized item did not cause it earlier.
+
 ## Still open
+- **What makes macOS stop drawing the icons,** above.
 - **Profiles** that change which of other apps' icons are visible, built on the same drag.
 - **Displays without a notch:** there is no notch edge to reach, and the rule for when macOS
   drops an oversized item there is not known.
