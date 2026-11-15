@@ -9,9 +9,9 @@ let package = Package(
         .library(name: "MultibarPersistence", targets: ["MultibarPersistence"]),
     ],
     targets: [
-        // Dominio y puertos. Solo Foundation: nada de AppKit ni SwiftUI (ADR 0002).
+        // Domain and ports. Foundation only: no AppKit, no SwiftUI (ADR 0002).
         .target(name: "MultibarCore"),
-        // Adaptador de configuración en JSON.
+        // Adapter: configuration as JSON.
         .target(name: "MultibarPersistence", dependencies: ["MultibarCore"]),
         .testTarget(name: "MultibarCoreTests", dependencies: ["MultibarCore"]),
         .testTarget(name: "MultibarPersistenceTests", dependencies: ["MultibarPersistence"]),

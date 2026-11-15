@@ -1,64 +1,70 @@
 # Multibar — handoff
 
-**Estado:** esqueleto, spec y roadmap listos; la app compila pero todavía no hace nada · **Última actualización:** 13/11/2026
-**Lenguaje:** Swift 6 (ver `docs/adr/0001-lenguaje.md`) · **Forma:** hexagonal liviana (`docs/adr/0002-forma-hexagonal.md`)
-**Correr:** `xcodegen generate && open Multibar.xcodeproj` · **Tests:** `swift test --package-path Core` · **Lint:** `./scripts/lint.sh` · **Deploy:** no tiene (app de escritorio: release manual)
+**Status:** skeleton, spec and roadmap ready; the app builds but does nothing yet · **Last updated:** 2026-11-15
+**Language:** Swift 6 (see `docs/adr/0001-language.md`) · **Shape:** lightweight hexagonal (`docs/adr/0002-hexagonal-shape.md`)
+**Run:** `xcodegen generate && open Multibar.xcodeproj` · **Tests:** `swift test --package-path Core` · **Lint:** `./scripts/lint.sh` · **Deploy:** none (desktop app: manual release)
 
 ## Roadmap
 
 ```mermaid
 timeline
     title Multibar
-    section Hecho
-        Etapa 1 · Esqueleto y spec : Swift + XcodeGen : 19 tests pendientes : CI
-    section Próximo
-        Etapa 2 · Grupos en la barra : ícono propio por grupo : persistencia a prueba de archivos rotos
-        Etapa 3 · Llenar y usar grupos : soltar sobre el ícono : casillas de apps : abrir y no encontrado
-        Etapa 4 · Pulido : reordenar y quitar : arrancar al iniciar sesión
-        Etapa 5 · Íconos reales (v2) : spike : ADR : adaptador nuevo
-        Etapa 6 · Cierre y publicación : auditoría : docs : release firmado
+    section Done
+        Stage 1 · Skeleton and spec : Swift + XcodeGen : 19 pending tests : CI : open source docs
+    section Next
+        Stage 2 · Foundations : spike on real icons : persistence that survives broken files : one icon per group
+        Stage 3 · Fill and use groups : drop on the icon : app checkboxes : open and not found
+        Stage 4 · Polish : reorder and remove : launch at login
+        Stage 5 · Organizer (v2) : ADR from the spike : hide and group real icons
+        Stage 6 · Closing and release : audit : docs : signed release
 ```
 
-| Etapa | Qué incluye | Estado | Criterios (SPEC) | Issues |
+| Stage | What it includes | Status | Criteria (SPEC) | Issues |
 |---|---|---|---|---|
-| 1 · Esqueleto y spec | lenguaje, forma, SPEC, tests vacíos, CI | ✅ | — | — |
-| 2 · Grupos en la barra | un `NSStatusItem` por grupo, config JSON | ⏳ | CA-1, CA-7, CA-8 | #1, #2 |
-| 3 · Llenar y usar grupos | drop sobre el ícono, URLs, casillas, abrir | ⏳ | CA-2, CA-3, CA-4, CA-5, CA-9 | #3, #4, #5 |
-| 4 · Pulido | reordenar, quitar, inicio de sesión | ⏳ | CA-6, CA-10 | #6, #7 |
-| 5 · Íconos reales (v2) | Teams, Claude, Maccy adentro de un grupo | ⏳ spike | se escriben después del spike | #8 |
-| 6 · Cierre | `/cierre-proyecto` completo | ⏳ | todos | — |
+| 1 · Skeleton and spec | language, shape, SPEC, empty tests, CI, contributor docs | ✅ | — | — |
+| 2 · Foundations | spike on real icons, JSON config, one `NSStatusItem` per group | ⏳ | AC-1, AC-7, AC-8 | #8, #2, #1 |
+| 3 · Fill and use groups | drop on the icon, URLs, checkboxes, opening | ⏳ | AC-2, AC-3, AC-4, AC-5, AC-9 | #3, #4, #5 |
+| 4 · Polish | reorder, remove, launch at login | ⏳ | AC-6, AC-10 | #6, #7 |
+| 5 · Organizer (v2) | other apps' real icons hidden and shown inside a group | ⏳ after the spike | written after the spike | #8 |
+| 6 · Closing | audit, docs, release | ⏳ | all | — |
 
-## Qué se hizo (lo último arriba)
-- 13/11 · `/inicio-proyecto`: Swift + XcodeGen, package `Core/` (dominio y persistencia) separado
-  de `App/`, SPEC con 10 criterios, un test pendiente por criterio, CI, Dependabot, licencia,
-  8 issues abiertos.
+## What was done (latest first)
+- 2026-11-15 · Docs, tests and templates moved to English; README as a product page;
+  `CONTRIBUTING.md` and `SECURITY.md`; privacy principles added to the spec and enforced in lint.
+- 2026-11-13 · Project start: Swift + XcodeGen, `Core/` package (domain and persistence)
+  separate from `App/`, SPEC with 10 criteria, one pending test per criterion, CI, Dependabot,
+  license, 8 issues.
 
-## Qué sigue
-1. #2 (persistencia) y #1 (grupos en la barra): los dos están `ready` y son la base del resto.
-2. #8 (spike de íconos reales) se puede hacer en paralelo: define si la v2 existe.
+## What is next
+1. #8 (spike on real icons) first: it decides whether and how v2 exists, and which permissions
+   it needs.
+2. #2 (persistence) and #1 (groups in the bar): both `ready`, the base for everything else.
 
-## Decisiones que tomé (para vetar)
-- **Alcance v1 = lanzador;** íconos reales de otras apps quedan para la v2 tras el spike #8 (confirmado en el chat).
-- **Licencia Apache-2.0** (`LICENSE`, `NOTICE`, README): es el default para apps que otros instalan. ChargeCap usa MIT; si preferís la misma, se cambia ahora antes de publicar nada.
-- **macOS 15 como mínimo** (`project.yml`, `Core/Package.swift`).
-- **Sin sandbox y fuera del App Store** (ADR 0001): abrir archivos arbitrarios y la v2 con Accesibilidad lo hacen inviable.
-- **Sin comandos de shell como ítem;** para "cualquier cosa" se usan Atajos (`shortcuts://`) (SPEC, sección 3).
-- **Ícono del grupo = SF Symbol o emoji;** imágenes propias quedan para después.
-- **Código en inglés, docs en castellano,** como ChargeCap.
-- **Sin `Team.yml` opcional:** XcodeGen 2.46 falla si el archivo no existe aunque esté marcado `optional`; la firma se elige en Xcode o con `DEVELOPMENT_TEAM`.
+## Decisions taken (open to veto)
+- **v1 = launcher groups; v2 = organizer** (hide other apps' icons and group them), after
+  spike #8.
+- **Apache-2.0 license** (`LICENSE`, `NOTICE`, README).
+- **Minimum macOS 15** (`project.yml`, `Core/Package.swift`).
+- **No sandbox, not on the Mac App Store** (ADR 0001).
+- **No shell commands as items;** Shortcuts (`shortcuts://`) cover "anything else" (SPEC §3).
+- **Group icon = SF Symbol or emoji;** custom images come later.
+- **Docs and code in English.**
+- **Issue labels in English:** `feature`, `tech-debt`, `security` (were `resultado`, `deuda`,
+  `seguridad`).
 
-## Para decidir
-- Nada pendiente.
+## To decide
+- Enable GitHub private vulnerability reporting (repo setting) so the link in `SECURITY.md`
+  works.
 
-## Pendientes y deudas conocidas
-- Sin UI tests de la barra (end-to-end): chequeo manual en `docs/DISENO.md`.
-- Release firmado y notarizado: se resuelve en la etapa 6.
+## Known debts
+- No UI tests for the menu bar (end-to-end): manual check in `docs/DESIGN.md`.
+- Signed and notarized release: handled in stage 6.
 
-## Dónde está todo
-| Qué | Dónde |
+## Where everything is
+| What | Where |
 |---|---|
-| Spec y criterios | `SPEC.md` |
-| Decisiones | `docs/adr/` |
-| Diseño interno | `docs/DISENO.md` |
-| Para externos | `README.md` |
+| Spec and criteria | `SPEC.md` |
+| Decisions | `docs/adr/` |
+| Internal design | `docs/DESIGN.md` |
+| For users and contributors | `README.md`, `CONTRIBUTING.md`, `SECURITY.md` |
 | Issues | https://github.com/malenitaa/multibar/issues |

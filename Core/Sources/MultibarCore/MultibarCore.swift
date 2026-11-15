@@ -1,3 +1,3 @@
-// Dominio de Multibar: grupos, ítems y casos de uso, más los puertos que el dominio
-// necesita (Launcher, ConfigStore, TargetResolver, LoginItemService).
-// Todavía vacío: se llena hasta que pasen los tests de Core/Tests (ver SPEC.md, sección 5).
+// Multibar's domain: groups, items and use cases, plus the ports the domain needs
+// (Launcher, ConfigStore, TargetResolver, LoginItemService).
+// Still empty: it gets filled until the tests in Core/Tests pass (see SPEC.md, section 5).

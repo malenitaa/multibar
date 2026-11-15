@@ -1,27 +1,27 @@
 ---
 name: Spike
-about: Una pregunta que hay que responder investigando, con fecha de corte. Lo que sale es conocimiento, no código final.
+about: A question to answer by investigating, with a time limit. The output is knowledge, not final code.
 labels: spike
 ---
 
-<!-- Título: "[spike] <qué se prueba>". -->
+<!-- Title: "[spike] <what is being tested>". -->
 
-## Pregunta que responde
+## Question to answer
 
-¿…?
+…?
 
 ## Timebox
 
-<cuánto tiempo, por ejemplo "2 horas">. Al vencer se anota lo aprendido en **Hallazgos**, aunque no esté terminado.
+<how long, e.g. "2 hours">. When it runs out, write what was learned under **Findings**, even if unfinished.
 
-## Qué cuenta como respuesta
+## What counts as an answer
 
-Lo que tiene que pasar para decir "sí, se puede" o "no, y por qué".
+What has to happen to say "yes, it can be done" or "no, and why".
 
-## Pasos
+## Steps
 
 - [ ] …
 
-## Hallazgos
+## Findings
 
-Se completa al cerrar. Si cambia una decisión, va a un ADR y se enlaza acá.
+Filled in when closing. If it changes a decision, that goes into an ADR linked here.

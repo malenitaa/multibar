@@ -5,18 +5,18 @@ xcuserdata/
 *.xcuserstate
 *.xcscmblueprint
 
-# XcodeGen: el .xcodeproj se genera desde project.yml
+# XcodeGen: the .xcodeproj is generated from project.yml
 *.xcodeproj/
 
 # Swift Package Manager
 .build/
 .swiftpm/
 
-# Secretos y archivos locales
+# Secrets and local files
 .env
 *.local.*
 
-# Doc interna de mantenimiento
+# Internal maintenance notes
 docs/interno/
 
 # macOS

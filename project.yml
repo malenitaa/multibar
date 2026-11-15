@@ -34,7 +34,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: io.github.malenitaa.Multibar
         PRODUCT_NAME: Multibar
-        INFOPLIST_KEY_LSUIElement: YES   # solo barra de menú, sin ícono en el Dock
+        INFOPLIST_KEY_LSUIElement: YES   # menu bar only, no Dock icon
         INFOPLIST_KEY_CFBundleDisplayName: Multibar
         INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.utilities"
 
