@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a vulnerability or a conduct problem
+    url: https://github.com/malenitaa/usherette/security/advisories/new
+    about: Both are reported privately, never in a public issue. Only the maintainers can read the report.
