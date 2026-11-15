@@ -17,6 +17,7 @@
 | Menu bar icons and group strips | `App/UI/MenuBar/` |
 | Settings window | `App/UI/Settings/` |
 | Xcode project | generated from `project.yml` with `xcodegen generate` |
+| App icon | drawn by `scripts/make-icon.swift`, which writes every size into `App/Assets.xcassets/AppIcon.appiconset` |
 
 Dependency rule (ADR 0002): `App` → `UsherettePersistence` → `UsheretteCore`. `Core/Sources`
 does not import AppKit, SwiftUI or ServiceManagement, and no source file references networking
