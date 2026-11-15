@@ -4,7 +4,8 @@
 
 Multibar lets you create your own groups in the menu bar. Each group is an icon you choose (a
 symbol or an emoji) that opens a list of whatever belongs to that context: apps, files,
-folders, a VM, a shortcut, a website and, later on, the real menu bar icons of other apps.
+folders, a VM, a shortcut, a website. Hide the individual icons with macOS's own setting and
+keep one icon per context.
 
 ```
  ┌───────────── menu bar ─────────────┐
@@ -24,10 +25,10 @@ hidden. Multibar organizes it by *context*:
 
 - **Groups by category.** "Work", "Tasks", "Personal": each one its own icon, with its own
   contents.
-- **Icons and launchers together.** A group can hold things to open (apps, files, URLs) next
-  to, in v2, the live menu bar icons of other apps.
-- **Safe by design.** No network, no telemetry, no reading of your data, and the fewest
-  permissions that make each feature work. See [Privacy and security](#privacy-and-security).
+- **Anything you open goes in a group.** Apps, files, folders, URLs, VMs, Shortcuts.
+- **Safe by design.** No network, no telemetry, no reading of your data, and none of the
+  Accessibility or Screen Recording permissions other menu bar managers ask for. See
+  [Privacy and security](#privacy-and-security).
 
 ## Planned features
 **v1 — launcher groups** (no special permissions)
@@ -40,7 +41,8 @@ hidden. Multibar organizes it by *context*:
 
 **v2 — organizer** (under investigation, see
 [#8](https://github.com/malenitaa/multibar/issues/8))
-- Hide other apps' menu bar icons and show them inside a group.
+- Hide other apps' icons with macOS's own menu bar setting and reach those apps from a group,
+  without Multibar ever touching them.
 
 The full behaviour, with acceptance criteria, is in [SPEC.md](SPEC.md).
 
@@ -49,9 +51,8 @@ The full behaviour, with acceptance criteria, is in [SPEC.md](SPEC.md).
   the code references networking APIs.
 - It **does not read your data**: not your windows, documents or clipboard. It only knows
   what you put in a group.
-- v1 needs **no system permissions**. Any permission v2 requires will be documented and
-  justified in [SECURITY.md](SECURITY.md) before it ships, and the launcher will keep working
-  without it.
+- It **never asks for Accessibility or Screen Recording**, the permissions that would let an
+  app see your screen or control other apps. v1 needs no permissions at all.
 - Your configuration is a plain JSON file at
   `~/Library/Application Support/Multibar/config.json`.
 - The code is open so you can check all of the above yourself.

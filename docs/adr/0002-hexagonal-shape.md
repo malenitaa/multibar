@@ -7,7 +7,7 @@ Ports and adapters pay off when at least two of these hold: more than one extern
 life longer than three months, other people touching the code, logic worth testing without the
 system. Here all four hold:
 - **Several external systems:** `NSWorkspace` (opening), the disk (configuration),
-  `SMAppService` (login item) and, in v2, the Accessibility API.
+  `SMAppService` (login item).
 - **Long life:** it is a daily tool.
 - **Other contributors:** the project is open source.
 - **Logic testable without the system:** groups, items, duplicates, ordering, classifying what
@@ -26,8 +26,7 @@ App/                         Xcode target (AppKit + SwiftUI)
 ```
 - One port per need of the domain (`Launcher`, `ConfigStore`, `TargetResolver`,
   `LoginItemService`), not per system.
-- v2 comes in as another adapter (`MenuBarExtrasProvider` or similar) without touching the
-  domain.
+- v2 comes in as more adapters without touching the domain.
 
 ## Verification
 ```bash
