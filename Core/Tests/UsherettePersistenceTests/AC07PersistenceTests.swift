@@ -1,5 +1,5 @@
 import Testing
-@testable import MultibarPersistence
+@testable import UsherettePersistence
 
 // AC-7 · Persistence. Pending: implement until it passes (SPEC.md, section 5).
 @Suite("AC-7 · Persistence")

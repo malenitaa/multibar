@@ -1,4 +1,4 @@
-name: Multibar
+name: Usherette
 options:
   bundleIdPrefix: io.github.malenitaa
   deploymentTarget:
@@ -6,7 +6,7 @@ options:
   createIntermediateGroups: true
 
 packages:
-  MultibarCore:
+  UsheretteCore:
     path: Core
 
 settings:
@@ -20,28 +20,28 @@ settings:
     CODE_SIGN_STYLE: Automatic
 
 targets:
-  Multibar:
+  Usherette:
     type: application
     platform: macOS
     sources:
       - path: App
     dependencies:
-      - package: MultibarCore
-        product: MultibarCore
-      - package: MultibarCore
-        product: MultibarPersistence
+      - package: UsheretteCore
+        product: UsheretteCore
+      - package: UsheretteCore
+        product: UsherettePersistence
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.malenitaa.Multibar
-        PRODUCT_NAME: Multibar
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.malenitaa.Usherette
+        PRODUCT_NAME: Usherette
         INFOPLIST_KEY_LSUIElement: YES   # menu bar only, no Dock icon
-        INFOPLIST_KEY_CFBundleDisplayName: Multibar
+        INFOPLIST_KEY_CFBundleDisplayName: Usherette
         INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.utilities"
 
 schemes:
-  Multibar:
+  Usherette:
     build:
       targets:
-        Multibar: all
+        Usherette: all
     run:
       config: Debug

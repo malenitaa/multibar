@@ -3,7 +3,7 @@
 **Date:** 2026-11-13 · **Status:** accepted
 
 ## Context
-Multibar lives in the macOS menu bar: it creates dynamic `NSStatusItem`s (one per group),
+Usherette lives in the macOS menu bar: it creates dynamic `NSStatusItem`s (one per group),
 receives files dropped on them, opens apps with `NSWorkspace`, registers as a login item with
 `SMAppService`. It only runs on macOS.
 

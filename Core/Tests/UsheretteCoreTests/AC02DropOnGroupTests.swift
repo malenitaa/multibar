@@ -1,5 +1,5 @@
 import Testing
-@testable import MultibarCore
+@testable import UsheretteCore
 
 // AC-2 · Drop on the group icon. Pending: implement until it passes (SPEC.md, section 5).
 @Suite("AC-2 · Drop on the group icon")

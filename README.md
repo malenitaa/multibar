@@ -1,8 +1,8 @@
-# Multibar
+# Usherette
 
 **Organize your macOS menu bar by context, not by clutter.**
 
-Multibar lets you create your own groups in the menu bar. Each group is an icon you choose (a
+Usherette lets you create your own groups in the menu bar. Each group is an icon you choose (a
 symbol or an emoji) that opens a list of whatever belongs to that context: apps, files,
 folders, a VM, a shortcut, a website. Hide the individual icons with macOS's own setting and
 keep one icon per context.
@@ -17,11 +17,11 @@ keep one icon per context.
 
 > **Status: early development.** The repository currently holds the specification, the
 > architecture and a pending test per acceptance criterion. Nothing is usable yet. Follow the
-> [roadmap](HANDOFF.md#roadmap) or pick an [issue](https://github.com/malenitaa/multibar/issues).
+> [roadmap](HANDOFF.md#roadmap) or pick an [issue](https://github.com/malenitaa/usherette/issues).
 
 ## Why another menu bar app
 Tools like Bartender and Ice organize the menu bar by *visibility*: shown, hidden, always
-hidden. Multibar organizes it by *context*:
+hidden. Usherette organizes it by *context*:
 
 - **Groups by category.** "Work", "Tasks", "Personal": each one its own icon, with its own
   contents.
@@ -40,21 +40,21 @@ hidden. Multibar organizes it by *context*:
 - Optional launch at login.
 
 **v2 — organizer** (under investigation, see
-[#8](https://github.com/malenitaa/multibar/issues/8))
+[#8](https://github.com/malenitaa/usherette/issues/8))
 - Hide other apps' icons with macOS's own menu bar setting and reach those apps from a group,
-  without Multibar ever touching them.
+  without Usherette ever touching them.
 
 The full behaviour, with acceptance criteria, is in [SPEC.md](SPEC.md).
 
 ## Privacy and security
-- Multibar **never connects to the internet** and collects nothing. The lint step fails if
+- Usherette **never connects to the internet** and collects nothing. The lint step fails if
   the code references networking APIs.
 - It **does not read your data**: not your windows, documents or clipboard. It only knows
   what you put in a group.
 - It **never asks for Accessibility or Screen Recording**, the permissions that would let an
   app see your screen or control other apps. v1 needs no permissions at all.
 - Your configuration is a plain JSON file at
-  `~/Library/Application Support/Multibar/config.json`.
+  `~/Library/Application Support/Usherette/config.json`.
 - The code is open so you can check all of the above yourself.
 
 ## Requirements
@@ -65,7 +65,7 @@ The full behaviour, with acceptance criteria, is in [SPEC.md](SPEC.md).
 ## Build and run
 ```bash
 xcodegen generate
-open Multibar.xcodeproj
+open Usherette.xcodeproj
 ```
 The `.xcodeproj` is not in the repository: it is generated from `project.yml`. To sign, pick
 your team in Xcode (Signing & Capabilities) or pass `DEVELOPMENT_TEAM=<id>` to `xcodebuild`.
