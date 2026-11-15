@@ -122,13 +122,13 @@ private struct OtherIconsSection: View {
     var body: some View {
         Text("Other apps' icons").font(.headline)
 
-        Toggle("Hide the icons on the left of Usherette's marker", isOn: Binding(get: { model.configuration.hidesIcons }, set: model.setHidesIcons))
+        Toggle("Hide the icons on the left of Usherette's marker", isOn: Binding(get: { model.configuration.hidesIcons }, set: { model.setHidesIcons($0) }))
             .disabled(!model.canHideIcons)
             .accessibilityIdentifier("hide-icons")
         if !model.canHideIcons {
             caption("Hiding works only on a display with a notch for now.")
         } else if model.configuration.hidesIcons {
-            Toggle("Show them for now, to move icons around", isOn: Binding(get: { model.isArranging }, set: model.setArranging))
+            Toggle("Show them for now, to move icons around", isOn: Binding(get: { model.isArranging }, set: { model.setArranging($0) }))
                 .accessibilityIdentifier("arrange-icons")
             caption("While they are shown, hold ⌘ and drag any icon to the left of the ‹ marker to hide it, or to its right to keep it in view.")
         } else {
@@ -145,7 +145,7 @@ private struct OtherIconsSection: View {
                 "To add another app's icon to a group and open its menu from there, Usherette needs the Accessibility permission. "
                     + "It is used only to find and click menu bar icons. Everything else works without it."
             )
-            Button("Allow Accessibility…", action: model.requestAccessibility)
+            Button("Allow Accessibility…") { model.requestAccessibility() }
                 .accessibilityIdentifier("allow-accessibility")
         }
     }
