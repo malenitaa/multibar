@@ -1,10 +1,10 @@
-# Multibar — specification
+# Usherette — specification
 
 **Status:** draft · **Last reviewed:** 2026-11-15 · Lines marked `[assumed]` were decided
 without confirmation; change the line to veto them.
 
 ## 1. What it is and who it is for
-Multibar is a macOS menu bar app that organizes the menu bar **by context**. You create
+Usherette is a macOS menu bar app that organizes the menu bar **by context**. You create
 **groups**: each group is its own icon in the menu bar (a symbol or emoji you pick) and holds
 whatever belongs to that context. A "Work" group with Teams, Passwords and a VM; a "Tasks"
 group with your clipboard manager and your assistant.
@@ -44,14 +44,14 @@ It is built in two steps:
 
 ## 4. Non-negotiable principles
 Changing any of these requires an ADR.
-- **No network, no telemetry.** Multibar never connects to anything. `./scripts/lint.sh` fails
+- **No network, no telemetry.** Usherette never connects to anything. `./scripts/lint.sh` fails
   if the code references networking APIs.
-- **It does not read user data.** Multibar only knows what you put in a group. It never reads
+- **It does not read user data.** Usherette only knows what you put in a group. It never reads
   the content of windows, documents, the clipboard or other apps' menus.
-- **No invasive permissions, ever.** Multibar never requests Accessibility or Screen
+- **No invasive permissions, ever.** Usherette never requests Accessibility or Screen
   Recording (`docs/adr/0003-no-invasive-permissions.md`). v1 needs no permissions at all.
 - **Your configuration is yours:** a readable JSON file at
-  `~/Library/Application Support/Multibar/config.json`. A file that could not be read is never
+  `~/Library/Application Support/Usherette/config.json`. A file that could not be read is never
   overwritten: a copy is kept first.
 - **The domain does not import AppKit or SwiftUI** (see `docs/adr/0002-hexagonal-shape.md`).
 
@@ -66,10 +66,10 @@ One per capability. Tests live in `Core/Tests/` and are currently pending.
 | AC-4 | the "Work" group | I add `utm://start?name=Windows`, a folder and a `.pdf` | they become a URL, a folder and a file, with a readable name | `AC04ItemKindsTests` |
 | AC-5 | a group with an app, a file and a URL | I click each one | each opens with the method that matches its kind | `AC05OpenItemTests` |
 | AC-6 | a group with three items, and two groups | I move the third item to the top, remove one and move a group | the new order is kept and what was removed does not come back | `AC06ReorderAndRemoveTests` |
-| AC-7 | two groups with items | I quit and reopen Multibar | they are the same: groups, icons, items and order | `AC07PersistenceTests` |
-| AC-8 | a broken `config.json`, or one from an unknown version | I open Multibar | it is not overwritten: a copy `config.json.bak-<date>` is kept, the app starts empty and says so | `AC08BrokenConfigTests` |
+| AC-7 | two groups with items | I quit and reopen Usherette | they are the same: groups, icons, items and order | `AC07PersistenceTests` |
+| AC-8 | a broken `config.json`, or one from an unknown version | I open Usherette | it is not overwritten: a copy `config.json.bak-<date>` is kept, the app starts empty and says so | `AC08BrokenConfigTests` |
 | AC-9 | an item whose app or file no longer exists | I open the group | the item shows up disabled as "not found" and nothing crashes | `AC09MissingTargetTests` |
-| AC-10 | the "Launch at login" option | I turn it on and off | Multibar is registered and unregistered as a login item | `AC10LaunchAtLoginTests` |
+| AC-10 | the "Launch at login" option | I turn it on and off | Usherette is registered and unregistered as a login item | `AC10LaunchAtLoginTests` |
 
 Test levels (see `docs/DESIGN.md`):
 - **Unit** (always): domain with fakes for the ports. `swift test --package-path Core`.
@@ -88,7 +88,7 @@ Test levels (see `docs/DESIGN.md`):
 - **Dropped thing that is not an app, file or folder** (text, an image dragged from a web
   page): ignored.
 - **Many items** (more than 30 in a group): the menu scrolls like any `NSMenu`.
-- **No room in the menu bar** (notch): macOS hides icons on its own; Multibar does not solve
+- **No room in the menu bar** (notch): macOS hides icons on its own; Usherette does not solve
   this in v1. Fewer icons in the bar, which is what v2 is about, is what helps.
 
 ## 7. Out of scope for now
@@ -101,12 +101,12 @@ Test levels (see `docs/DESIGN.md`):
 References: **Ice** (open source, GPL-3.0: we read how it behaves, we do not copy code) and
 **Bartender** (commercial).
 
-| The reference does | Multibar? | Why |
+| The reference does | Usherette? | Why |
 |---|---|---|
 | Hide other apps' icons from the menu bar | Left to macOS | The system setting does it without giving any app extra permissions |
 | Show the hidden icons, live, in a secondary bar | No | Needs Accessibility and Screen Recording (ADR 0003) |
 | Reach the hidden apps from one place | v2, from the group | What can be done without permissions is spike #8 |
-| Sections by visibility (visible / hidden / always hidden) | No | Multibar groups by context, not by visibility |
+| Sections by visibility (visible / hidden / always hidden) | No | Usherette groups by context, not by visibility |
 | Reorder other apps' icons in the bar | No | macOS already does this with ⌘-drag |
 | Reveal hidden icons on hover or with a hotkey | No | Same reason as the secondary bar |
-| Launcher for apps, files and URLs per group | **Yes, v1** | Neither does it; it is what makes Multibar different |
+| Launcher for apps, files and URLs per group | **Yes, v1** | Neither does it; it is what makes Usherette different |

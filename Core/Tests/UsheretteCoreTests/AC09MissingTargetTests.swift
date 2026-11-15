@@ -1,5 +1,5 @@
 import Testing
-@testable import MultibarCore
+@testable import UsheretteCore
 
 // AC-9 · Target that no longer exists. Pending: implement until it passes (SPEC.md, section 5).
 @Suite("AC-9 · Target that no longer exists")

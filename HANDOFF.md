@@ -1,14 +1,14 @@
-# Multibar — handoff
+# Usherette — handoff
 
 **Status:** skeleton, spec and roadmap ready; the app builds but does nothing yet · **Last updated:** 2026-11-15
 **Language:** Swift 6 (see `docs/adr/0001-language.md`) · **Shape:** lightweight hexagonal (`docs/adr/0002-hexagonal-shape.md`)
-**Run:** `xcodegen generate && open Multibar.xcodeproj` · **Tests:** `swift test --package-path Core` · **Lint:** `./scripts/lint.sh` · **Deploy:** none (desktop app: manual release)
+**Run:** `xcodegen generate && open Usherette.xcodeproj` · **Tests:** `swift test --package-path Core` · **Lint:** `./scripts/lint.sh` · **Deploy:** none (desktop app: manual release)
 
 ## Roadmap
 
 ```mermaid
 timeline
-    title Multibar
+    title Usherette
     section Done
         Stage 1 · Skeleton and spec : Swift + XcodeGen : 19 pending tests : CI : open source docs
     section Next
@@ -16,7 +16,7 @@ timeline
         Stage 3 · Fill and use groups : drop on the icon : app checkboxes : open and not found
         Stage 4 · Polish : reorder and remove : launch at login
         Stage 5 · Organizer (v2) : icons hidden by macOS : apps reached from the group : no permissions
-        Stage 6 · Closing and release : audit : docs : signed release
+        Stage 6 · Closing and release : audit : docs : signed release : Homebrew cask
 ```
 
 | Stage | What it includes | Status | Criteria (SPEC) | Issues |
@@ -26,9 +26,12 @@ timeline
 | 3 · Fill and use groups | drop on the icon, URLs, checkboxes, opening | ⏳ | AC-2, AC-3, AC-4, AC-5, AC-9 | #3, #4, #5 |
 | 4 · Polish | reorder, remove, launch at login | ⏳ | AC-6, AC-10 | #6, #7 |
 | 5 · Organizer (v2) | other apps' icons hidden with macOS's own setting and reached from a group | ⏳ after the spike | written after the spike | #8 |
-| 6 · Closing | audit, docs, release | ⏳ | all | — |
+| 6 · Closing | audit, docs, signed release, Homebrew cask `usherette` | ⏳ | all | — |
 
 ## What was done (latest first)
+- 2026-11-15 · Renamed from Multibar to Usherette (repository, app, modules, bundle id,
+  configuration folder). `Core` split into `Domain/`, `UseCases/` and `Ports/`; design rules
+  written in `docs/DESIGN.md`.
 - 2026-11-15 · ADR 0003: no Accessibility, no Screen Recording; v2 relies on macOS's own
   setting to hide icons. Private vulnerability reporting enabled on GitHub.
 - 2026-11-15 · Docs, tests and templates moved to English; README as a product page;
@@ -50,6 +53,8 @@ timeline
 - **No shell commands as items;** Shortcuts (`shortcuts://`) cover "anything else" (SPEC §3).
 - **Group icon = SF Symbol or emoji;** custom images come later.
 - **Docs and code in English.**
+- **Name: Usherette** for the app, the executable, the repository and the future Homebrew
+  cask (`usherette`); the name was free on Homebrew and GitHub on 2026-11-15.
 - **Issue labels in English:** `feature`, `tech-debt`, `security` (were `resultado`, `deuda`,
   `seguridad`).
 
@@ -67,4 +72,4 @@ timeline
 | Decisions | `docs/adr/` |
 | Internal design | `docs/DESIGN.md` |
 | For users and contributors | `README.md`, `CONTRIBUTING.md`, `SECURITY.md` |
-| Issues | https://github.com/malenitaa/multibar/issues |
+| Issues | https://github.com/malenitaa/usherette/issues |

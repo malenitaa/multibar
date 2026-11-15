@@ -16,13 +16,13 @@ system. Here all four hold:
 ## Decision
 ```
 Core/                        Swift package, Foundation only
-  Sources/MultibarCore/        domain (types and use cases) + ports (protocols)
-  Sources/MultibarPersistence/ adapter: configuration as JSON
+  Sources/UsheretteCore/        Domain/ (types and rules), UseCases/, Ports/ (protocols)
+  Sources/UsherettePersistence/ adapter: configuration as JSON
   Tests/                       one file per acceptance criterion, with fakes for the ports
 App/                         Xcode target (AppKit + SwiftUI)
   Adapters/                    NSWorkspace, SMAppService, file icons
-  UI/                          status items, menu, settings window
-  MultibarApp.swift            composition: the only place that wires the graph
+  UI/                          MenuBar/ (status items, menus), Settings/
+  UsheretteApp.swift            composition: the only place that wires the graph
 ```
 - One port per need of the domain (`Launcher`, `ConfigStore`, `TargetResolver`,
   `LoginItemService`), not per system.

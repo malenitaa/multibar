@@ -1,5 +1,5 @@
 import Testing
-@testable import MultibarCore
+@testable import UsheretteCore
 
 // AC-5 · Open an item. Pending: implement until it passes (SPEC.md, section 5).
 @Suite("AC-5 · Open an item")

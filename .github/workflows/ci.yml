@@ -28,5 +28,5 @@ jobs:
         run: |
           brew install xcodegen
           xcodegen generate
-          xcodebuild -project Multibar.xcodeproj -scheme Multibar -configuration Debug \
+          xcodebuild -project Usherette.xcodeproj -scheme Usherette -configuration Debug \
             -derivedDataPath build CODE_SIGNING_ALLOWED=NO build

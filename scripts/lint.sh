@@ -14,8 +14,8 @@ if grep -rEn "import (AppKit|SwiftUI|ServiceManagement|ApplicationServices)" Cor
   echo "error: Core/Sources imports a framework it must not depend on (ADR 0002)" >&2
   exit 1
 fi
-# Multibar never talks to the network (SPEC.md, section 4).
+# Usherette never talks to the network (SPEC.md, section 4).
 if grep -rEn "URLSession|NWConnection|CFNetwork|import Network" Core/Sources App; then
-  echo "error: networking API referenced; Multibar must not connect to anything (SPEC.md §4)" >&2
+  echo "error: networking API referenced; Usherette must not connect to anything (SPEC.md §4)" >&2
   exit 1
 fi

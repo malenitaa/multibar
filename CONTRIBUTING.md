@@ -1,10 +1,10 @@
-# Contributing to Multibar
+# Contributing to Usherette
 
 Thanks for wanting to help. Bugs, ideas and new features are all welcome.
 
 ## Before you start
 - **Found a bug or have an idea?** Open an
-  [issue](https://github.com/malenitaa/multibar/issues/new/choose) using the matching template.
+  [issue](https://github.com/malenitaa/usherette/issues/new/choose) using the matching template.
   Search first to avoid duplicates.
 - **Want to write code?** Pick an issue labelled `ready`, or open one describing what you want
   to add and wait for a quick OK before investing time. Issues labelled `good first issue` are
@@ -16,19 +16,20 @@ You need macOS 15 or later, Xcode 16 or later and XcodeGen (`brew install xcodeg
 
 ```bash
 xcodegen generate
-open Multibar.xcodeproj
+open Usherette.xcodeproj
 ```
 
 ## How the code is organized
 `Core/` is a Swift package with the domain and persistence, Foundation only. `App/` is the
-AppKit and SwiftUI layer. The reasoning is in [docs/adr/](docs/adr/) and the map of the code in
-[docs/DESIGN.md](docs/DESIGN.md).
+AppKit and SwiftUI layer. The reasoning is in [docs/adr/](docs/adr/). The map of the code, the
+design rules and a "where does a change go?" table are in [docs/DESIGN.md](docs/DESIGN.md):
+read that table before adding a file.
 
-## Rules that keep Multibar trustworthy
+## Rules that keep Usherette trustworthy
 These come from [SPEC.md](SPEC.md) §4 and are enforced by `./scripts/lint.sh`:
 - **No network.** No `URLSession`, no `Network` framework, no telemetry, no update pings.
-- **No reading user data.** Multibar only knows what the user put in a group.
-- **No Accessibility, no Screen Recording.** Multibar never requests them (ADR 0003). Any
+- **No reading user data.** Usherette only knows what the user put in a group.
+- **No Accessibility, no Screen Recording.** Usherette never requests them (ADR 0003). Any
   other permission needs an issue and an ADR first.
 - **The domain stays pure.** `Core/Sources` does not import AppKit, SwiftUI or
   ServiceManagement.
