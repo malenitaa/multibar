@@ -10,7 +10,7 @@
 timeline
     title Usherette
     section Done
-        Stage 1 · Skeleton and spec : Swift + XcodeGen : 19 pending tests : CI : open source docs
+        Stage 1 · Skeleton and spec : Swift + XcodeGen : pending tests : CI : open source docs
     section v1 · Launcher groups
         Stage 2 · Foundations : spike on the organizer : persistence that survives broken files : one icon per group
         Stage 3 · Fill and use groups : drop on the icon : app checkboxes : open and not found
@@ -27,7 +27,7 @@ timeline
 | Stage | What it includes | Status | Criteria (SPEC) | Issues |
 |---|---|---|---|---|
 | 1 · Skeleton and spec | language, shape, SPEC, empty tests, CI, contributor docs | ✅ | — | — |
-| 2 · Foundations | spike on the organizer, JSON config, one `NSStatusItem` per group | ⏳ | AC-1, AC-7, AC-8 | #8, #2, #1 |
+| 2 · Foundations | spike on the organizer ✅, JSON config ✅, one `NSStatusItem` per group | 🔧 in progress | AC-1, AC-7 ✅, AC-8 ✅ | #8, #2, #1 |
 | 3 · Fill and use groups | drop on the icon, URLs, checkboxes, opening | ⏳ | AC-2, AC-3, AC-4, AC-5, AC-9 | #3, #4, #5 |
 | 4 · Polish | reorder, remove, launch at login | ⏳ | AC-6, AC-10 | #6, #7 |
 | 5 · Organizer (v2) | opt-in module: other apps' real icons leave the bar and show in the group's strip; without it, icons hidden with macOS's own setting | ⏳ after the spike | written after the spike | #8 |
@@ -39,6 +39,8 @@ timeline
 What is in and out compared with the reference product is in the parity table of `SPEC.md` §7.
 
 ## What was done (latest first)
+- 2026-11-15 · #2: configuration persistence. Domain types (`Configuration`, `Group`,
+  `GroupIcon`, `Item`), the `ConfigStore` port and `JSONConfigStore`; AC-7 and AC-8 pass.
 - 2026-11-15 · Spike #8 run on macOS 27.2: the main idea works with Accessibility alone;
   hiding needs no permission. Results in `docs/spikes/0008-organizer.md`.
 - 2026-11-15 · Scope set against Bartender 7 and Pro: parity table in the spec, roadmap
@@ -57,7 +59,8 @@ What is in and out compared with the reference product is in the parity table of
 ## What is next
 1. What spike #8 left open: moving icons programmatically, computing the hiding width, and
    testing Teams and macOS 26.
-2. #2 (persistence) and #1 (groups in the bar): both `ready`, the base for everything else.
+2. #1 (groups in the bar): `ready`. It wires `JSONConfigStore` into the app for the first
+   time and has to show the user what `ConfigLoadResult.recovery` reports.
 
 ## Decisions taken (open to veto)
 - **The main idea is the organizer:** a group opens a strip with other apps' real icons, and

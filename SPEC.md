@@ -67,7 +67,8 @@ Changing any of these requires an ADR.
 - **The domain does not import AppKit or SwiftUI** (see `docs/adr/0002-hexagonal-shape.md`).
 
 ## 5. Acceptance criteria
-One per capability. Tests live in `Core/Tests/` and are currently pending.
+One per capability. Tests live in `Core/Tests/`; the ones not yet implemented are marked as
+pending. Done so far: AC-7, AC-8.
 
 | # | Given | When | Then | Test |
 |---|---|---|---|---|
@@ -78,7 +79,7 @@ One per capability. Tests live in `Core/Tests/` and are currently pending.
 | AC-5 | a group with an app, a file and a URL | I click each one | each opens with the method that matches its kind | `AC05OpenItemTests` |
 | AC-6 | a group with three items, and two groups | I move the third item to the top, remove one and move a group | the new order is kept and what was removed does not come back | `AC06ReorderAndRemoveTests` |
 | AC-7 | two groups with items | I quit and reopen Usherette | they are the same: groups, icons, items and order | `AC07PersistenceTests` |
-| AC-8 | a broken `config.json`, or one from an unknown version | I open Usherette | it is not overwritten: a copy `config.json.bak-<date>` is kept, the app starts empty and says so | `AC08BrokenConfigTests` |
+| AC-8 | a broken `config.json`, or one from an unknown version | I open Usherette | it is not overwritten: it is kept as `config.json.bak-<date>`, the app starts empty and says so | `AC08BrokenConfigTests` |
 | AC-9 | an item whose app or file no longer exists | I open the group | the item shows up disabled as "not found" and nothing crashes | `AC09MissingTargetTests` |
 | AC-10 | the "Launch at login" option | I turn it on and off | Usherette is registered and unregistered as a login item | `AC10LaunchAtLoginTests` |
 
