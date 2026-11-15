@@ -11,9 +11,10 @@
 | JSON configuration adapter | `Core/Sources/UsherettePersistence/` |
 | Tests, one file per acceptance criterion | `Core/Tests/` |
 | Composition (wires the graph) | `App/UsheretteApp.swift` |
-| System adapters (`NSWorkspace`, `SMAppService`, icons) | `App/Adapters/` (created in stage 2) |
-| Menu bar icons and group strips | `App/UI/MenuBar/` (created in stage 2) |
-| Settings window | `App/UI/Settings/` (created in stage 2) |
+| What the UI shows and the actions it can ask for | `App/UI/AppModel.swift` |
+| System adapters (`NSWorkspace`, `SMAppService`, icons) | `App/Adapters/` (created in stage 3) |
+| Menu bar icons and group strips | `App/UI/MenuBar/` |
+| Settings window | `App/UI/Settings/` |
 | Xcode project | generated from `project.yml` with `xcodegen generate` |
 
 Dependency rule (ADR 0002): `App` → `UsherettePersistence` → `UsheretteCore`. `Core/Sources`
@@ -78,8 +79,13 @@ something goes, it is not yet clear what it is.
   `JSONConfigStore`; never reinterpret an old file silently.
 
 ## Planned technical pieces
-- **One `NSStatusItem` per group**, created and destroyed when the configuration changes. The
-  icon is an `NSImage(systemSymbolName:)` or the emoji as the button title.
+- **One `NSStatusItem` per group** (`MenuBarController`), all rebuilt when the groups change.
+  macOS puts each new item to the left of the previous ones, so they are created last group
+  first for the bar to read in configuration order. The icon is an
+  `NSImage(systemSymbolName:)`, a plain circle if that symbol does not exist, or the emoji as
+  the button title. For now each icon opens a plain menu; the strip comes with the items.
+- **Finding a way in:** the app has no Dock icon, so with no groups, or with something to
+  report, the settings window opens at launch. Opening the app again also shows it.
 - **The group's strip:** a borderless, non-activating `NSPanel` anchored under the group's
   status item, with one button per item; it closes when focus moves elsewhere.
 - **Dropping on the icon:** `NSStatusBarButton` is not meant to be subclassed; a transparent
@@ -101,7 +107,8 @@ something goes, it is not yet clear what it is.
 | Dependency vulnerabilities | Not applicable yet | `Core` has no dependencies; Dependabot watches in case they appear |
 
 ### Manual check before each release
-1. Create two groups: two icons appear in the menu bar, in order.
+1. Create two groups in the settings window: two icons appear in the menu bar, in order.
+   An unknown symbol name shows a circle; an empty name is refused with a message.
 2. Drop an app from Finder on an icon: it appears in the menu with its icon.
 3. Click the item: the app opens.
 4. Quit and reopen Usherette: everything is the same.

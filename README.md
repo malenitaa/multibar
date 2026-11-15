@@ -15,8 +15,8 @@ context.
           └─ Teams · Passwords · Windows VM
 ```
 
-> **Status: early development.** The repository currently holds the specification, the
-> architecture and a pending test per acceptance criterion. Nothing is usable yet. Follow the
+> **Status: early development.** You can create groups and see them as icons in the menu
+> bar, and they are remembered. Groups cannot hold anything yet. Follow the
 > [roadmap](HANDOFF.md#roadmap) or pick an [issue](https://github.com/malenitaa/usherette/issues).
 
 ## Why another menu bar app

@@ -68,7 +68,7 @@ Changing any of these requires an ADR.
 
 ## 5. Acceptance criteria
 One per capability. Tests live in `Core/Tests/`; the ones not yet implemented are marked as
-pending. Done so far: AC-7, AC-8.
+pending. Done so far: AC-1, AC-7, AC-8.
 
 | # | Given | When | Then | Test |
 |---|---|---|---|---|

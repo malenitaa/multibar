@@ -1,6 +1,6 @@
 # Usherette — handoff
 
-**Status:** skeleton, spec and roadmap ready; the app builds but does nothing yet · **Last updated:** 2026-11-15
+**Status:** groups can be created and show as icons in the menu bar, and are remembered; they cannot hold items yet · **Last updated:** 2026-11-15
 **Language:** Swift 6 (see `docs/adr/0001-language.md`) · **Shape:** lightweight hexagonal (`docs/adr/0002-hexagonal-shape.md`)
 **Run:** `xcodegen generate && open Usherette.xcodeproj` · **Tests:** `swift test --package-path Core` · **Lint:** `./scripts/lint.sh` · **Deploy:** none (desktop app: manual release)
 
@@ -27,7 +27,7 @@ timeline
 | Stage | What it includes | Status | Criteria (SPEC) | Issues |
 |---|---|---|---|---|
 | 1 · Skeleton and spec | language, shape, SPEC, empty tests, CI, contributor docs | ✅ | — | — |
-| 2 · Foundations | spike on the organizer ✅, JSON config ✅, one `NSStatusItem` per group | 🔧 in progress | AC-1, AC-7 ✅, AC-8 ✅ | #8, #2, #1 |
+| 2 · Foundations | spike on the organizer, JSON config, one `NSStatusItem` per group | ✅ | AC-1, AC-7, AC-8 | #8, #2, #1 |
 | 3 · Fill and use groups | drop on the icon, URLs, checkboxes, opening | ⏳ | AC-2, AC-3, AC-4, AC-5, AC-9 | #3, #4, #5 |
 | 4 · Polish | reorder, remove, launch at login | ⏳ | AC-6, AC-10 | #6, #7 |
 | 5 · Organizer (v2) | opt-in module: other apps' real icons leave the bar and show in the group's strip; without it, icons hidden with macOS's own setting | ⏳ after the spike | written after the spike | #8 |
@@ -39,6 +39,8 @@ timeline
 What is in and out compared with the reference product is in the parity table of `SPEC.md` §7.
 
 ## What was done (latest first)
+- 2026-11-15 · #1: groups in the menu bar. `CreateGroup` use case, one status item per group,
+  settings window to add groups, notice when the configuration was set aside. AC-1 passes.
 - 2026-11-15 · #2: configuration persistence. Domain types (`Configuration`, `Group`,
   `GroupIcon`, `Item`), the `ConfigStore` port and `JSONConfigStore`; AC-7 and AC-8 pass.
 - 2026-11-15 · Spike #8 run on macOS 27.2: the main idea works with Accessibility alone;
@@ -59,8 +61,8 @@ What is in and out compared with the reference product is in the parity table of
 ## What is next
 1. What spike #8 left open: moving icons programmatically, computing the hiding width, and
    testing Teams and macOS 26.
-2. #1 (groups in the bar): `ready`. It wires `JSONConfigStore` into the app for the first
-   time and has to show the user what `ConfigLoadResult.recovery` reports.
+2. Stage 3: #3 (drop on the icon), #5 (open an item) and #4 (app checkboxes). The group's
+   strip of icons replaces the plain menu there.
 
 ## Decisions taken (open to veto)
 - **The main idea is the organizer:** a group opens a strip with other apps' real icons, and
@@ -76,7 +78,11 @@ What is in and out compared with the reference product is in the parity table of
 - **No sandbox, not on the Mac App Store** (ADR 0001).
 - **No shell commands as items and no custom scripts;** Shortcuts (`shortcuts://`) cover
   "anything else" (SPEC §3).
-- **Group icon = SF Symbol or emoji;** custom images come later.
+- **Group icon = SF Symbol or emoji;** custom images come later. There is one text field:
+  an emoji is kept as emoji, anything else is read as a symbol name.
+- **A group's icon opens a plain menu for now** (name, Settings, Quit); the strip arrives with
+  the items in stage 3.
+- **Group names can repeat;** only an empty name is refused.
 - **Docs and code in English.**
 - **Name: Usherette** for the app, the executable, the repository and the future Homebrew
   cask (`usherette`); the name was free on Homebrew and GitHub on 2026-11-15.
