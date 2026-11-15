@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="App/Assets.xcassets/AppIcon.appiconset/icon_256.png" width="128" alt="Usherette icon: a torch lighting three icons in a row">
+</p>
+
 # Usherette
 
 **Organize your macOS menu bar by context, not by clutter.**

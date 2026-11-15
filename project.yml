@@ -34,6 +34,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: io.github.malenitaa.Usherette
         PRODUCT_NAME: Usherette
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_LSUIElement: YES   # menu bar only, no Dock icon
         INFOPLIST_KEY_CFBundleDisplayName: Usherette
         INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.utilities"
