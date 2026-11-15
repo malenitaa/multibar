@@ -132,7 +132,11 @@ private struct OtherIconsSection: View {
                 .accessibilityIdentifier("arrange-icons")
             caption(
                 "Apps you add to a group are moved behind the ‹ marker for you. To hide any other icon, show them, "
-                    + "hold ⌘ and drag it to the left of the marker."
+                    + "hold ⌘ and drag it to the left of the marker, then click the marker to put them away."
+            )
+            caption(
+                "While icons are hidden, macOS shows a « in the menu bar. Clicking it shows them on the left, over the app's menus, "
+                    + "until you click it again. That is macOS, not Usherette."
             )
         } else {
             caption("A small ‹ marker appears in the menu bar. Icons you drag to its left are kept out of the bar. This needs no permission.")

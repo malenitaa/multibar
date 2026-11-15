@@ -39,6 +39,8 @@ timeline
 What is in and out compared with the reference product is in the parity table of `SPEC.md` §7.
 
 ## What was done (latest first)
+- 2026-11-15 · Clicking the ‹ marker hides the icons; the group menu can show and hide them;
+  the settings window follows the desktop in use. Found that macOS has its own « overflow.
 - 2026-11-15 · #21: a group opens as a strip of icons under the menu bar instead of a text
   menu; a right-click gives Settings and Quit. AC-16, checked by hand.
 - 2026-11-15 · #19: icons are placed for the user. Adding a menu bar app to a group moves its
@@ -102,7 +104,10 @@ What is in and out compared with the reference product is in the parity table of
 ## Known debts
 - No UI tests for the menu bar (end-to-end): manual check in `docs/DESIGN.md`. Checks made by
   pressing controls through Accessibility miss bugs that only real mouse clicks show (the
-  strip not closing on a second click was one); post real click events when checking.
+  strip not closing on a second click was one); post real click events when checking, and
+  capture the whole menu bar, not only the right of the notch.
+- Not checked: that the settings window no longer makes macOS switch desktops. It needs a
+  person with more than one desktop.
 - Hiding works only on a display with a notch.
 - Opening one hidden icon shows all the hidden ones while its menu is open, and the menu
   appears under the real icon, not under the group.

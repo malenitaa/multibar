@@ -11,10 +11,22 @@ final class MenuBarController: NSObject {
     private let strip = GroupStripController()
     private let openSettings: () -> Void
     private let openItem: (Item) -> Void
+    /// What the right-click menu offers about hidden icons, asked each time it opens.
+    private let hiddenIconsAction: () -> (title: String, run: () -> Void)?
+    private var pendingMenuAction: (() -> Void)?
+    /// Put in front of the names macOS remembers icon places by.
+    private let namePrefix: String
 
-    init(openSettings: @escaping () -> Void, openItem: @escaping (Item) -> Void) {
+    init(
+        namePrefix: String = "",
+        openSettings: @escaping () -> Void,
+        openItem: @escaping (Item) -> Void,
+        hiddenIconsAction: @escaping () -> (title: String, run: () -> Void)?
+    ) {
+        self.namePrefix = namePrefix
         self.openSettings = openSettings
         self.openItem = openItem
+        self.hiddenIconsAction = hiddenIconsAction
     }
 
     func show(_ groups: [Group]) {
@@ -46,23 +58,23 @@ final class MenuBarController: NSObject {
     /// where the user left the icon.
     private func keepNewGroupsVisible(_ groups: [Group]) {
         let defaults = UserDefaults.standard
-        for (index, group) in groups.enumerated() where defaults.object(forKey: Self.positionKey(group)) == nil {
-            defaults.set(Double(groups.count - index), forKey: Self.positionKey(group))
+        for (index, group) in groups.enumerated() where defaults.object(forKey: positionKey(group)) == nil {
+            defaults.set(Double(groups.count - index), forKey: positionKey(group))
         }
     }
 
     /// Where AppKit looks for a status item's first place in the bar: larger is further left.
-    private static func positionKey(_ group: Group) -> String {
+    private func positionKey(_ group: Group) -> String {
         "NSStatusItem Preferred Position \(autosaveName(group))"
     }
 
-    private static func autosaveName(_ group: Group) -> String {
-        "group-\(group.id.uuidString)"
+    private func autosaveName(_ group: Group) -> String {
+        "\(namePrefix)group-\(group.id.uuidString)"
     }
 
     private func makeStatusItem(for group: Group) -> NSStatusItem {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        item.autosaveName = Self.autosaveName(group)
+        item.autosaveName = autosaveName(group)
         if let button = item.button {
             button.target = self
             button.action = #selector(clicked(_:))
@@ -109,6 +121,12 @@ final class MenuBarController: NSObject {
         title.isEnabled = false
         menu.addItem(title)
         menu.addItem(.separator())
+        if let hiddenIcons = hiddenIconsAction() {
+            pendingMenuAction = hiddenIcons.run
+            let toggle = NSMenuItem(title: hiddenIcons.title, action: #selector(runPendingMenuAction), keyEquivalent: "")
+            toggle.target = self
+            menu.addItem(toggle)
+        }
         let settings = NSMenuItem(title: "Settings…", action: #selector(showSettings), keyEquivalent: ",")
         settings.target = self
         menu.addItem(settings)
@@ -117,6 +135,11 @@ final class MenuBarController: NSObject {
         item.menu = menu
         item.button?.performClick(nil)
         item.menu = nil
+    }
+
+    @objc private func runPendingMenuAction() {
+        pendingMenuAction?()
+        pendingMenuAction = nil
     }
 
     @objc private func showSettings() {

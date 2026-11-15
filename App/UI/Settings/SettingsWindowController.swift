@@ -11,6 +11,9 @@ final class SettingsWindowController {
         window.title = "Usherette"
         window.styleMask = [.titled, .closable, .miniaturizable]
         window.isReleasedWhenClosed = false
+        // Shown from another desktop, the window comes to that desktop. Without this, macOS
+        // switches back to the desktop the window was last on.
+        window.collectionBehavior = [.moveToActiveSpace]
         window.center()
     }
 

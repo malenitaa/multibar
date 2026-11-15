@@ -64,8 +64,12 @@ is moving icons programmatically.
 - **Recreating status items shuffles the bar.** Removing and adding our own group icons while
   a drag was about to start moved things around; they are now only recreated when the groups
   themselves change.
-- **macOS shows a « marker** at the left of the icons when some do not fit, which is the case
-  whenever Usherette is hiding. What clicking it does was not explored.
+- **macOS has its own overflow.** When some icons do not fit, which is the case whenever
+  Usherette is hiding, macOS 27 shows a « at the left of the remaining icons. Clicking it
+  draws the overflowed icons on the left of the notch, over the front app's menus (which are
+  cut short), and turns into »; clicking again puts them away. So "hidden" means "in the
+  system's overflow": out of sight, and one click away without any permission. Earlier
+  screenshots in this document were cropped to the right of the notch and missed this.
 - Other apps' icons were dragged this time (a usage meter, Maccy, Passwords), both ways,
   several times, ending in the original order.
 

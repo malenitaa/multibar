@@ -45,6 +45,8 @@ final class AppModel {
         removeItem = RemoveItem(store: store)
         openMenuBarIcon = OpenMenuBarIcon(icons: icons, hider: marker)
         arrangeMenuBarIcons = ArrangeMenuBarIcons(icons: icons, hider: marker)
+        // Clicking the marker puts the icons away, the same as unticking "show them" in settings.
+        marker.onClick = { [weak self] in self?.setArranging(false) }
     }
 
     /// Whether this display lets icons be hidden at all.
@@ -127,6 +129,14 @@ final class AppModel {
             try? await Task.sleep(for: .milliseconds(700))
             refreshMenuBarApps()
         }
+    }
+
+    /// What the group menu offers about hidden icons right now, if hiding is on.
+    var hiddenIconsAction: (title: String, run: () -> Void)? {
+        guard configuration.hidesIcons else { return nil }
+        return isArranging
+            ? ("Hide Icons Again", { [weak self] in self?.setArranging(false) })
+            : ("Show Hidden Icons", { [weak self] in self?.setArranging(true) })
     }
 
     func open(_ item: Item) {
