@@ -44,6 +44,39 @@ codebase:
 Folders that never exist: `Utils/`, `Helpers/`, `Common/`, `Misc/`. If it is unclear where
 something goes, it is not yet clear what it is.
 
+## Configuration file
+`~/Library/Application Support/Usherette/config.json`, written by `JSONConfigStore`
+(pretty-printed, keys sorted, saved atomically):
+
+```json
+{
+  "groups" : [
+    {
+      "icon" : { "kind" : "symbol", "value" : "briefcase" },
+      "id" : "ECFB19B7-A4DB-4A3C-BA78-8BCAFD201FE0",
+      "items" : [
+        {
+          "bundleID" : "com.microsoft.teams2",
+          "id" : "A2D3EEAC-5699-4268-9595-D1B9786C8CFC",
+          "kind" : "app",
+          "name" : "Microsoft Teams",
+          "target" : "/Applications/Microsoft Teams.app"
+        }
+      ],
+      "name" : "Work"
+    }
+  ],
+  "version" : 1
+}
+```
+
+- `icon.kind` is `symbol` or `emoji`; an item's `kind` is `app`, `file`, `folder` or `url`.
+- Fields this build does not know are ignored. A file that is not valid, or whose `version`
+  is not the current one, is renamed to `config.json.bak-<UTC date>` and the app starts
+  empty; `load()` reports it in `ConfigLoadResult.recovery`.
+- Changing the format means raising `Configuration.currentVersion` and adding a migration in
+  `JSONConfigStore`; never reinterpret an old file silently.
+
 ## Planned technical pieces
 - **One `NSStatusItem` per group**, created and destroyed when the configuration changes. The
   icon is an `NSImage(systemSymbolName:)` or the emoji as the button title.
