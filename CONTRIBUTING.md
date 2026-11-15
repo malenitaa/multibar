@@ -29,8 +29,9 @@ read that table before adding a file.
 These come from [SPEC.md](SPEC.md) §4 and are enforced by `./scripts/lint.sh`:
 - **No network.** No `URLSession`, no `Network` framework, no telemetry, no update pings.
 - **No reading user data.** Usherette only knows what the user put in a group.
-- **No Accessibility, no Screen Recording.** Usherette never requests them (ADR 0003). Any
-  other permission needs an issue and an ADR first.
+- **No permissions by default, never Screen Recording.** Accessibility is used only by the
+  opt-in organizer module (ADR 0003). Any feature that needs a permission is off by default,
+  has its own switch, and needs an issue and an ADR first.
 - **The domain stays pure.** `Core/Sources` does not import AppKit, SwiftUI or
   ServiceManagement.
 - **No new dependencies without discussion.** There are none today, on purpose.

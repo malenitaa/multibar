@@ -11,14 +11,17 @@ group with your clipboard manager and your assistant.
 
 The goal is to bring together the best of the existing menu bar managers (a menu bar without
 clutter) with something none of them do (grouping by category), while staying safe by design:
-no network, no telemetry, and none of the system permissions those managers need.
+no network, no telemetry, and no system permission unless you turn on a feature that needs it.
 
 It is built in two steps:
 - **v1 — launcher groups.** Groups hold apps, files, folders and URLs to open. No special
   permissions.
-- **v2 — organizer.** Other apps' icons are hidden from the main bar with macOS's own menu bar
-  setting, and the group becomes the way to reach those apps. How far this goes without
-  permissions is the subject of a spike (issue #8).
+- **v2 — organizer.** Other apps' icons are hidden from the main bar and reached from a
+  group. By default that uses macOS's own menu bar setting and no permissions; an opt-in
+  module shows the real icons inside the group and asks for Accessibility. A spike (issue #8)
+  comes first.
+
+Section 7 lists what comes after.
 
 ## 2. What it does (v1: launcher groups)
 1. Create, rename and delete groups; each group has a name and an icon (SF Symbol or emoji) and
@@ -33,14 +36,16 @@ It is built in two steps:
 8. Optionally launch at login.
 
 ## 3. What it does not do (on purpose)
-- **It never moves, captures or controls other apps' icons itself.** The tools that do need
-  Accessibility and Screen Recording, permissions that let an app see far more than a menu
-  bar. Hiding icons is left to macOS's own setting (ADR 0003).
+- **By default it does not touch other apps' icons.** Hiding them is left to macOS's own
+  setting. Showing them inside a group is an opt-in module (ADR 0003). It never captures the
+  screen.
 - **It does not run shell commands.** For "anything else" there are macOS Shortcuts
   (`shortcuts://`), which the user can see and control. Running commands from a config file
   opens a door that does not need to be open.
 - It does not sync between Macs and it is not on the Mac App Store (the sandbox is
   a separate decision, see ADR 0003).
+- No menu bar styling, clipboard history, calendar or weather (see the parity table in
+  section 7 for why).
 
 ## 4. Non-negotiable principles
 Changing any of these requires an ADR.
@@ -48,8 +53,10 @@ Changing any of these requires an ADR.
   if the code references networking APIs.
 - **It does not read user data.** Usherette only knows what you put in a group. It never reads
   the content of windows, documents, the clipboard or other apps' menus.
-- **No invasive permissions, ever.** Usherette never requests Accessibility or Screen
-  Recording (`docs/adr/0003-no-invasive-permissions.md`). v1 needs no permissions at all.
+- **No permissions by default; never Screen Recording.** Out of the box Usherette holds no
+  system permission. A feature that needs one is off until you turn it on, one switch per
+  feature, and everything else keeps working without it. Accessibility is only ever used by
+  the opt-in organizer module (`docs/adr/0003-permissions.md`).
 - **Your configuration is yours:** a readable JSON file at
   `~/Library/Application Support/Usherette/config.json`. A file that could not be read is never
   overwritten: a copy is kept first.
@@ -91,22 +98,45 @@ Test levels (see `docs/DESIGN.md`):
 - **No room in the menu bar** (notch): macOS hides icons on its own; Usherette does not solve
   this in v1. Fewer icons in the bar, which is what v2 is about, is what helps.
 
-## 7. Out of scope for now
-- **v2 — organizer:** other apps' icons hidden through macOS's own setting and reached from a
-  group. Spike first; its acceptance criteria are written once the spike closes.
-- A keyboard shortcut per group.
-- Import and export of the configuration.
+## 7. Beyond v1
+Planned capabilities, in the order of the roadmap in `HANDOFF.md`. Acceptance criteria are
+written when each stage is next.
 
-### Parity with the references (for v2)
-References: **Ice** (open source, GPL-3.0: we read how it behaves, we do not copy code) and
-**Bartender** (commercial).
+- **Organizer.** Other apps' icons hidden with macOS's own setting (no permission), and an
+  opt-in module that shows their real menu bar items inside a group (Accessibility). Spike #8
+  first.
+- **Keyboard.** A hotkey per group, and search across everything in the groups.
+- **Profiles and triggers.** Sets of groups ("Work", "Focus") switched by hand, by hotkey or
+  automatically.
+- **Automation.** Shortcuts actions and AppleScript.
+- **Custom items.** System readings, labels, spacers.
+- **File shelf.** A place to drop files temporarily and send them with AirDrop.
 
-| The reference does | Usherette? | Why |
+### Parity with the reference
+Reference: **Bartender 7** and **Bartender Pro** (commercial), as described on their product
+pages on 2026-11-15. Usherette builds the capabilities it wants under its own names and
+design; nothing is copied.
+
+| The reference does | Usherette | Notes |
 |---|---|---|
-| Hide other apps' icons from the menu bar | Left to macOS | The system setting does it without giving any app extra permissions |
-| Show the hidden icons, live, in a secondary bar | No | Needs Accessibility and Screen Recording (ADR 0003) |
-| Reach the hidden apps from one place | v2, from the group | What can be done without permissions is spike #8 |
-| Sections by visibility (visible / hidden / always hidden) | No | Usherette groups by context, not by visibility |
-| Reorder other apps' icons in the bar | No | macOS already does this with ⌘-drag |
-| Reveal hidden icons on hover or with a hotkey | No | Same reason as the secondary bar |
-| Launcher for apps, files and URLs per group | **Yes, v1** | Neither does it; it is what makes Usherette different |
+| Combine related items into one group | **Yes, v1** | The core of Usherette; groups also hold things to launch, which the reference does not |
+| Hide other apps' icons | Yes | Through macOS's own setting, without permissions |
+| Show hidden icons on demand | Opt-in module | Needs Accessibility; off by default (ADR 0003). Shown inside the group |
+| Work without Screen Recording | Yes, always | No feature may require it (ADR 0003) |
+| A secondary bar under the menu bar for hidden icons | No | The group's menu plays that role |
+| Reach icons covered by the notch | No | Fewer icons in the bar removes the cause |
+| Search and activate other apps' items from the keyboard | No | Search covers what is in Usherette's groups |
+| Hotkeys | Planned | One per group |
+| Search and keyboard-only use | Planned | Over the contents of the groups |
+| Profiles for different setups | Planned | Which groups are shown |
+| Triggers | Planned | Power, displays and time need no permission; Wi-Fi and Focus need a narrow one and are opt-in each |
+| Automation: Shortcuts, AppleScript, agents | Planned | |
+| Custom items: system readings, labels, spacers, emoji | Planned | Built-in sources only; no custom scripts (section 3) |
+| Spacing between menu bar items | Planned, to verify | A global macOS preference |
+| Files and AirDrop shelf | Later | |
+| Monitoring of coding agents | Later, to define | Must not read other tools' data without a clear opt-in |
+| Audio controls | To decide | See `HANDOFF.md` |
+| Menu bar styling (tints, gradients, shapes) | No | Not a goal |
+| Clipboard history | No | Dedicated apps do it, and it means reading user data |
+| Calendar | No | macOS has it, and it means reading user data |
+| Weather | No | macOS has it, and it needs the network |

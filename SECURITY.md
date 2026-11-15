@@ -15,7 +15,13 @@
 | Version | Permission | Why |
 |---|---|---|
 | v1 (launcher groups) | None | Opening apps, files and URLs needs no special permission |
-| v2 (organizer) | None planned | Hiding other apps' icons is left to macOS's own menu bar setting. Usherette never requests Accessibility or Screen Recording (`docs/adr/0003-no-invasive-permissions.md`) |
+| v2 (organizer), default | None | Hiding other apps' icons is left to macOS's own menu bar setting |
+| v2 (organizer), optional module | Accessibility, only if you turn the module on | Needed to show and press other apps' real menu bar items inside a group. Off by default; everything else works without it |
+| Any version | Never Screen Recording | No feature may require it |
+
+The rules behind this table are in `docs/adr/0003-permissions.md`. With the optional module
+on, Usherette holds a permission that technically allows more than it uses; the code that
+uses it is kept in one place so it can be reviewed.
 
 Usherette is not sandboxed and is not distributed through the Mac App Store (see
 `docs/adr/0001-language.md`).
