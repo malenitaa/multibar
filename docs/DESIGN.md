@@ -104,7 +104,10 @@ something goes, it is not yet clear what it is.
 - **The group's strip** (`GroupStripController`, `GroupStripView`): a borderless,
   non-activating `NSPanel` centred under the group's icon, with one button per item and one
   for settings. It never takes focus from the app in use. A global and a local mouse monitor
-  close it on a click anywhere else; watching mouse buttons needs no permission. Item icons
+  close it on a click anywhere else; watching mouse buttons needs no permission. macOS draws
+  the menu bar in another process, so a click on our own group icon reaches the global
+  monitor too: clicks on the open group's icon are left to the icon, or the same click would
+  close the strip and open it again. Item icons
   are the icons of the apps themselves, read from their bundles.
 - **Dropping on the icon:** `NSStatusBarButton` is not meant to be subclassed; a transparent
   subview that implements `NSDraggingDestination` and accepts `.fileURL` is added to it. If

@@ -8,6 +8,8 @@ final class GroupStripController {
     private var panel: NSPanel?
     private var shownGroup: UsheretteCore.Group.ID?
     private var monitors: [Any] = []
+    /// Where the icon of the open group is on screen.
+    private var anchor = NSRect.zero
 
     /// Opens the strip of `group` under `anchor` (the group icon's frame on screen), or closes
     /// it if it is the one already open.
@@ -49,6 +51,7 @@ final class GroupStripController {
         panel.orderFrontRegardless()
 
         self.panel = panel
+        self.anchor = anchor
         shownGroup = group.id
         watchForClicksElsewhere()
     }
@@ -72,20 +75,27 @@ final class GroupStripController {
 
     private func watchForClicksElsewhere() {
         let buttons: NSEvent.EventTypeMask = [.leftMouseDown, .rightMouseDown]
-        // Clicks in other apps. Watching mouse buttons needs no permission.
+        // Clicks outside our windows. macOS draws the menu bar in another process, so a click
+        // on our own group icon arrives here too. Watching mouse buttons needs no permission.
         let elsewhere = NSEvent.addGlobalMonitorForEvents(matching: buttons) { [weak self] _ in
-            Task { @MainActor in self?.close() }
+            Task { @MainActor in self?.closeUnlessOnTheIcon() }
         }
-        // Clicks in our own windows, other than the strip itself and the menu bar icons, which
-        // decide for themselves what a click means.
+        // Clicks in our own windows, other than the strip itself.
         let ours = NSEvent.addLocalMonitorForEvents(matching: buttons) { [weak self] event in
-            let onMenuBarIcon = event.window?.className.contains("StatusBar") ?? false
-            if let self, event.window !== self.panel, !onMenuBarIcon {
-                self.close()
+            if let self, event.window !== self.panel {
+                self.closeUnlessOnTheIcon()
             }
             return event
         }
         monitors = [elsewhere, ours].compactMap { $0 }
+    }
+
+    /// A click on the open group's own icon is left to the icon, which closes the strip itself.
+    /// Closing here as well would make that same click open it again.
+    private func closeUnlessOnTheIcon() {
+        if !anchor.insetBy(dx: -2, dy: -2).contains(NSEvent.mouseLocation) {
+            close()
+        }
     }
 }
 
