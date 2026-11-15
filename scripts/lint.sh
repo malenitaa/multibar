@@ -19,6 +19,11 @@ if grep -rln "AXUIElement\|AXIsProcessTrusted\|import ApplicationServices" Core 
   echo "error: the Accessibility API may only be used in App/Adapters/AccessibilityMenuBarIcons.swift (ADR 0003)" >&2
   exit 1
 fi
+# Input events are posted from that adapter only, and only to drag menu bar icons (ADR 0003).
+if grep -rln "CGEvent\|CGWarpMouseCursorPosition" Core App | grep -v "^App/Adapters/AccessibilityMenuBarIcons.swift$"; then
+  echo "error: input events may only be posted from App/Adapters/AccessibilityMenuBarIcons.swift (ADR 0003)" >&2
+  exit 1
+fi
 # Screen Recording is never used (ADR 0003).
 if grep -rEn "CGWindowListCreateImage|SCShareableContent|SCStream|CGDisplayStream|CGRequestScreenCaptureAccess" Core/Sources App; then
   echo "error: screen capture API referenced; Usherette never uses Screen Recording (ADR 0003)" >&2

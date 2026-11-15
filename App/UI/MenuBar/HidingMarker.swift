@@ -13,6 +13,11 @@ final class HidingMarker: IconHider {
     /// Where the marker ends and how much macOS pads it, measured while it is narrow.
     private var measured: (rightEdge: Double, padding: Double)?
 
+    var markerFrame: ClosedRange<Double>? {
+        guard !isHiding, let frame = item?.button?.window?.frame, frame.width < 100, frame.maxX > 0 else { return nil }
+        return Double(frame.minX)...Double(frame.maxX)
+    }
+
     /// Whether the display the menu bar is on has a notch to hide icons behind.
     var canHide: Bool {
         notchRightEdge != nil

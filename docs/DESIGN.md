@@ -92,6 +92,10 @@ something goes, it is not yet clear what it is.
   everything on its left out of the bar (`HidingGeometry` has the rule). Group icons get a
   seeded position at the right end the first time they are created, so they are never on the
   hidden side.
+- **Placing icons:** `ArrangeMenuBarIcons` moves the icons of grouped apps behind the marker
+  and the others back, with a ⌘-drag posted by `AccessibilityMenuBarIcons`. It runs when an app
+  is added to or removed from a group, when hiding is turned on, and at launch for icons found
+  in view. Each drag blocks the main thread for under a second.
 - **Opening a hidden icon:** `OpenMenuBarIcon` reveals, waits for the icon, presses it through
   `AccessibilityMenuBarIcons`, waits for that app's new window to go away, and hides again.
 - **Trying it without touching the real configuration:** run the binary with
@@ -122,8 +126,9 @@ something goes, it is not yet clear what it is.
 2. Drop an app from Finder on an icon: it appears in the menu with its icon.
 3. Click the item: the app opens.
 4. Quit and reopen Usherette: everything is the same.
-5. Turn on hiding, show the icons, ⌘-drag two icons to the left of the ‹ marker and stop
-   showing them: they leave the bar, and the group icons stay.
+5. With Accessibility allowed and hiding on, add two menu bar apps to groups: each icon is
+   moved behind the marker by itself and leaves the bar; no other icon changes place, and the
+   group icons stay. Remove one from its group: its icon comes back.
 6. With Accessibility allowed, add one of those apps to a group and pick it from the group's
    menu: its icon comes back, its menu opens, and the icon leaves again when the menu closes.
 7. Quit Usherette: every icon is back where it was.

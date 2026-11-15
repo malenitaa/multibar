@@ -18,6 +18,15 @@ public struct Configuration: Codable, Equatable, Sendable {
         self.hidesIcons = hidesIcons
     }
 
+    /// The apps whose menu bar icon is in at least one group, each once, in the order found.
+    public var menuBarIconBundleIDs: [String] {
+        var seen = Set<String>()
+        return groups.flatMap(\.items).compactMap { item in
+            guard item.kind == .menuBarIcon, let bundleID = item.bundleID, seen.insert(bundleID).inserted else { return nil }
+            return bundleID
+        }
+    }
+
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         version = try container.decode(Int.self, forKey: .version)

@@ -39,6 +39,9 @@ timeline
 What is in and out compared with the reference product is in the parity table of `SPEC.md` §7.
 
 ## What was done (latest first)
+- 2026-11-15 · #19: icons are placed for the user. Adding a menu bar app to a group moves its
+  icon behind the marker, removing it from its last group brings it back. AC-15 passes.
+- 2026-11-15 · App icon, code of conduct, issue forms, repository description and topics.
 - 2026-11-15 · #14: first slice of the organizer. A marker hides the icons on its left with no
   permission; with Accessibility, menu bar apps can be added to a group and opened from it.
   AC-11 to AC-14 pass. Found that a synthetic ⌘-drag moves icons (`docs/spikes/0008-organizer.md`).
@@ -62,11 +65,9 @@ What is in and out compared with the reference product is in the parity table of
   license, 8 issues.
 
 ## What is next
-1. Arrange icons for the user: adding a menu bar app to a group should move its icon behind
-   the marker without any dragging by hand (the synthetic ⌘-drag works).
-2. The group's strip of icons, replacing the plain menu.
-3. Stage 3: #3 (drop on the icon), #5 (open an item) and #4 (app checkboxes).
-4. Displays without a notch, Teams and other apps, macOS 26.
+1. The group's strip of icons, replacing the plain menu.
+2. Stage 3: #3 (drop on the icon), #5 (open an item) and #4 (app checkboxes).
+3. Displays without a notch, Teams and other apps, macOS 26.
 
 ## Decisions taken (open to veto)
 - **The main idea is the organizer:** a group opens a strip with other apps' real icons, and
@@ -102,6 +103,9 @@ What is in and out compared with the reference product is in the parity table of
 - Hiding works only on a display with a notch.
 - Opening one hidden icon shows all the hidden ones while its menu is open, and the menu
   appears under the real icon, not under the group.
+- Each icon move blocks the app for under a second and takes the pointer; if the user moves
+  the mouse at that moment the drag can miss, and it is tried again.
+- During one test run the settings window closed by itself once; not reproduced, cause unknown.
 - A locally built app is signed ad hoc, so macOS forgets its Accessibility permission on every
   rebuild. A stable signing identity fixes that (stage 6).
 - Signed and notarized release: handled in stage 5.
