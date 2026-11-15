@@ -28,8 +28,8 @@ AppKit and SwiftUI layer. The reasoning is in [docs/adr/](docs/adr/) and the map
 These come from [SPEC.md](SPEC.md) §4 and are enforced by `./scripts/lint.sh`:
 - **No network.** No `URLSession`, no `Network` framework, no telemetry, no update pings.
 - **No reading user data.** Multibar only knows what the user put in a group.
-- **No new permissions without an ADR.** If a feature needs Accessibility, Screen Recording or
-  anything similar, propose it in an issue first.
+- **No Accessibility, no Screen Recording.** Multibar never requests them (ADR 0003). Any
+  other permission needs an issue and an ADR first.
 - **The domain stays pure.** `Core/Sources` does not import AppKit, SwiftUI or
   ServiceManagement.
 - **No new dependencies without discussion.** There are none today, on purpose.

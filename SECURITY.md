@@ -15,7 +15,7 @@
 | Version | Permission | Why |
 |---|---|---|
 | v1 (launcher groups) | None | Opening apps, files and URLs needs no special permission |
-| v2 (organizer) | To be decided | Hiding and showing other apps' menu bar icons requires system permissions. Which ones, and why each is unavoidable, will be documented here and in an ADR before v2 ships. The launcher will keep working if you decline them |
+| v2 (organizer) | None planned | Hiding other apps' icons is left to macOS's own menu bar setting. Multibar never requests Accessibility or Screen Recording (`docs/adr/0003-no-invasive-permissions.md`) |
 
 Multibar is not sandboxed and is not distributed through the Mac App Store (see
 `docs/adr/0001-language.md`).

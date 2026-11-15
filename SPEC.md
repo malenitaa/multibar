@@ -9,16 +9,16 @@ Multibar is a macOS menu bar app that organizes the menu bar **by context**. You
 whatever belongs to that context. A "Work" group with Teams, Passwords and a VM; a "Tasks"
 group with your clipboard manager and your assistant.
 
-The goal is to bring together the best of the existing menu bar managers (hiding other apps'
-icons) with something none of them do (grouping by category, and mixing real menu bar icons
-with things to launch), while staying safe by design: no network, no telemetry, minimal
-permissions.
+The goal is to bring together the best of the existing menu bar managers (a menu bar without
+clutter) with something none of them do (grouping by category), while staying safe by design:
+no network, no telemetry, and none of the system permissions those managers need.
 
 It is built in two steps:
 - **v1 — launcher groups.** Groups hold apps, files, folders and URLs to open. No special
   permissions.
-- **v2 — organizer.** Groups can also hold the *real* menu bar icons of other apps, which are
-  hidden from the main bar. This depends on the outcome of a spike (issue #8).
+- **v2 — organizer.** Other apps' icons are hidden from the main bar with macOS's own menu bar
+  setting, and the group becomes the way to reach those apps. How far this goes without
+  permissions is the subject of a spike (issue #8).
 
 ## 2. What it does (v1: launcher groups)
 1. Create, rename and delete groups; each group has a name and an icon (SF Symbol or emoji) and
@@ -33,13 +33,14 @@ It is built in two steps:
 8. Optionally launch at login.
 
 ## 3. What it does not do (on purpose)
-- **v1 does not move or hide other apps' icons.** That is v2, and a spike comes first: it
-  needs system permissions, relies on undocumented behaviour and can break with macOS updates.
+- **It never moves, captures or controls other apps' icons itself.** The tools that do need
+  Accessibility and Screen Recording, permissions that let an app see far more than a menu
+  bar. Hiding icons is left to macOS's own setting (ADR 0003).
 - **It does not run shell commands.** For "anything else" there are macOS Shortcuts
   (`shortcuts://`), which the user can see and control. Running commands from a config file
   opens a door that does not need to be open.
 - It does not sync between Macs and it is not on the Mac App Store (the sandbox is
-  incompatible with v2).
+  a separate decision, see ADR 0003).
 
 ## 4. Non-negotiable principles
 Changing any of these requires an ADR.
@@ -47,9 +48,8 @@ Changing any of these requires an ADR.
   if the code references networking APIs.
 - **It does not read user data.** Multibar only knows what you put in a group. It never reads
   the content of windows, documents, the clipboard or other apps' menus.
-- **Minimal permissions.** v1 needs none. v2 will ask only for what the spike proves
-  unavoidable, each permission justified in an ADR and in `SECURITY.md`, and the launcher keeps
-  working if you decline them.
+- **No invasive permissions, ever.** Multibar never requests Accessibility or Screen
+  Recording (`docs/adr/0003-no-invasive-permissions.md`). v1 needs no permissions at all.
 - **Your configuration is yours:** a readable JSON file at
   `~/Library/Application Support/Multibar/config.json`. A file that could not be read is never
   overwritten: a copy is kept first.
@@ -89,12 +89,11 @@ Test levels (see `docs/DESIGN.md`):
   page): ignored.
 - **Many items** (more than 30 in a group): the menu scrolls like any `NSMenu`.
 - **No room in the menu bar** (notch): macOS hides icons on its own; Multibar does not solve
-  this in v1. It is exactly what v2 improves.
+  this in v1. Fewer icons in the bar, which is what v2 is about, is what helps.
 
 ## 7. Out of scope for now
-- **v2 — real icons of other apps inside a group** (Teams, Claude, Maccy with their status and
-  their own menu), hidden from the main bar. Spike first; its acceptance criteria are written
-  once the spike closes.
+- **v2 — organizer:** other apps' icons hidden through macOS's own setting and reached from a
+  group. Spike first; its acceptance criteria are written once the spike closes.
 - A keyboard shortcut per group.
 - Import and export of the configuration.
 
@@ -104,9 +103,10 @@ References: **Ice** (open source, GPL-3.0: we read how it behaves, we do not cop
 
 | The reference does | Multibar? | Why |
 |---|---|---|
-| Hide other apps' icons from the menu bar | v2, if the spike allows | Half of the original idea; needs system permissions |
-| Show them in a secondary bar | v2, inside the group | The group *is* that bar |
+| Hide other apps' icons from the menu bar | Left to macOS | The system setting does it without giving any app extra permissions |
+| Show the hidden icons, live, in a secondary bar | No | Needs Accessibility and Screen Recording (ADR 0003) |
+| Reach the hidden apps from one place | v2, from the group | What can be done without permissions is spike #8 |
 | Sections by visibility (visible / hidden / always hidden) | No | Multibar groups by context, not by visibility |
 | Reorder other apps' icons in the bar | No | macOS already does this with ⌘-drag |
-| Reveal hidden icons on hover or with a hotkey | Maybe, after v2 | Depends on the spike |
+| Reveal hidden icons on hover or with a hotkey | No | Same reason as the secondary bar |
 | Launcher for apps, files and URLs per group | **Yes, v1** | Neither does it; it is what makes Multibar different |
