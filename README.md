@@ -3,7 +3,7 @@
 **Organize your macOS menu bar by context, not by clutter.**
 
 Usherette lets you create your own groups in the menu bar. Each group is an icon you choose (a
-symbol or an emoji) that opens a list of whatever belongs to that context: apps, files,
+symbol or an emoji) that opens a strip with whatever belongs to that context: apps, files,
 folders, a VM, a shortcut, a website. Hide the individual icons with macOS's own setting and
 keep one icon per context.
 

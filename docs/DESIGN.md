@@ -12,7 +12,7 @@
 | Tests, one file per acceptance criterion | `Core/Tests/` |
 | Composition (wires the graph) | `App/UsheretteApp.swift` |
 | System adapters (`NSWorkspace`, `SMAppService`, icons) | `App/Adapters/` (created in stage 2) |
-| Menu bar icons and menus | `App/UI/MenuBar/` (created in stage 2) |
+| Menu bar icons and group strips | `App/UI/MenuBar/` (created in stage 2) |
 | Settings window | `App/UI/Settings/` (created in stage 2) |
 | Xcode project | generated from `project.yml` with `xcodegen generate` |
 
@@ -47,6 +47,8 @@ something goes, it is not yet clear what it is.
 ## Planned technical pieces
 - **One `NSStatusItem` per group**, created and destroyed when the configuration changes. The
   icon is an `NSImage(systemSymbolName:)` or the emoji as the button title.
+- **The group's strip:** a borderless, non-activating `NSPanel` anchored under the group's
+  status item, with one button per item; it closes when focus moves elsewhere.
 - **Dropping on the icon:** `NSStatusBarButton` is not meant to be subclassed; a transparent
   subview that implements `NSDraggingDestination` and accepts `.fileURL` is added to it. If
   that does not work well, plan B is dropping on the settings window (see the AC-2 issue).

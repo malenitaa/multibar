@@ -7,7 +7,12 @@ without confirmation; change the line to veto them.
 Usherette is a macOS menu bar app that organizes the menu bar **by context**. You create
 **groups**: each group is its own icon in the menu bar (a symbol or emoji you pick) and holds
 whatever belongs to that context. A "Work" group with Teams, Passwords and a VM; a "Tasks"
-group with your clipboard manager and your assistant.
+group with your clipboard manager and your assistant. Clicking a group opens a **strip of
+icons** right under the menu bar with what is in it.
+
+The main idea has two halves: the strip holds the *real* menu bar icons of other apps, which
+leave the main bar, and **profiles** swap what the whole bar shows ("Working", "Focus",
+"Gaming"). Both depend on the opt-in organizer module (v2 below).
 
 The goal is to bring together the best of the existing menu bar managers (a menu bar without
 clutter) with something none of them do (grouping by category), while staying safe by design:
@@ -30,7 +35,7 @@ Section 7 lists what comes after.
 3. Add installed apps from a list with checkboxes (checked = in the group, unchecked = out).
 4. Add URLs, including custom schemes: a VM (`utm://start?name=…`), a shortcut
    (`shortcuts://run-shortcut?name=…`), a website.
-5. Clicking an item opens it (app, file, folder or URL).
+5. Clicking an item in the strip opens it (app, file, folder or URL).
 6. Reorder and remove items and groups.
 7. Remember everything across restarts.
 8. Optionally launch at login.
@@ -86,7 +91,7 @@ Test levels (see `docs/DESIGN.md`):
 - **Evals and performance**: not applicable (no LLM, no numbers in this spec).
 
 ## 6. Edge cases and errors
-- **Group with no items:** the menu shows "Drop something here" and a link to settings.
+- **Group with no items:** the strip shows "Drop something here" and a link to settings.
 - **Empty or whitespace-only name:** the group is not created.
 - **Compound emoji or unknown symbol:** the emoji is stored as is; an SF Symbol that does not
   exist on this macOS version is shown as a generic circle, without crashing.
@@ -94,7 +99,7 @@ Test levels (see `docs/DESIGN.md`):
 - **App that moved to another folder:** resolved by bundle id before path.
 - **Dropped thing that is not an app, file or folder** (text, an image dragged from a web
   page): ignored.
-- **Many items** (more than 30 in a group): the menu scrolls like any `NSMenu`.
+- **Many items** (more than fit in one row): the strip wraps into more rows.
 - **No room in the menu bar** (notch): macOS hides icons on its own; Usherette does not solve
   this in v1. Fewer icons in the bar, which is what v2 is about, is what helps.
 
@@ -102,12 +107,16 @@ Test levels (see `docs/DESIGN.md`):
 Planned capabilities, in the order of the roadmap in `HANDOFF.md`. Acceptance criteria are
 written when each stage is next.
 
-- **Organizer.** Other apps' icons hidden with macOS's own setting (no permission), and an
-  opt-in module that shows their real menu bar items inside a group (Accessibility). Spike #8
-  first.
+- **Organizer (the main idea).** Other apps' real menu bar items leave the main bar and show
+  up in the strip of their group, where clicking one opens its own menu. This is the opt-in
+  module (Accessibility). Without Screen Recording the strip shows each app's icon rather
+  than a picture of its menu bar item, so a live badge on the original is not visible.
+  Without the module, icons are hidden with macOS's own setting and the strip launches the
+  apps. Spike #8 first.
 - **Keyboard.** A hotkey per group, and search across everything in the groups.
-- **Profiles and triggers.** Sets of groups ("Work", "Focus") switched by hand, by hotkey or
-  automatically.
+- **Profiles and triggers.** Named setups ("Working", "Focus", "Gaming") that change what the
+  bar shows, switched by hand, by hotkey or automatically. With the module a profile covers
+  other apps' icons too; without it, only Usherette's own groups.
 - **Automation.** Shortcuts actions and AppleScript.
 - **Custom items.** System readings, labels, spacers.
 - **File shelf.** A place to drop files temporarily and send them with AirDrop.
@@ -121,21 +130,21 @@ design; nothing is copied.
 |---|---|---|
 | Combine related items into one group | **Yes, v1** | The core of Usherette; groups also hold things to launch, which the reference does not |
 | Hide other apps' icons | Yes | Through macOS's own setting, without permissions |
-| Show hidden icons on demand | Opt-in module | Needs Accessibility; off by default (ADR 0003). Shown inside the group |
+| Show hidden icons on demand | Opt-in module | Needs Accessibility; off by default (ADR 0003). Shown in the group's strip |
 | Work without Screen Recording | Yes, always | No feature may require it (ADR 0003) |
-| A secondary bar under the menu bar for hidden icons | No | The group's menu plays that role |
+| A bar under the menu bar holding the hidden icons | Yes, per group | Each group opens its own strip, instead of one bar for everything |
 | Reach icons covered by the notch | No | Fewer icons in the bar removes the cause |
 | Search and activate other apps' items from the keyboard | No | Search covers what is in Usherette's groups |
 | Hotkeys | Planned | One per group |
 | Search and keyboard-only use | Planned | Over the contents of the groups |
-| Profiles for different setups | Planned | Which groups are shown |
+| Profiles that replace the whole bar | Planned | Own groups without permissions; other apps' icons with the module |
 | Triggers | Planned | Power, displays and time need no permission; Wi-Fi and Focus need a narrow one and are opt-in each |
 | Automation: Shortcuts, AppleScript, agents | Planned | |
 | Custom items: system readings, labels, spacers, emoji | Planned | Built-in sources only; no custom scripts (section 3) |
 | Spacing between menu bar items | Planned, to verify | A global macOS preference |
 | Files and AirDrop shelf | Later | |
 | Monitoring of coding agents | Later, to define | Must not read other tools' data without a clear opt-in |
-| Audio controls | To decide | See `HANDOFF.md` |
+| Audio controls | Later, only if feasible | Low priority. Now-playing for any app depends on a private macOS API |
 | Menu bar styling (tints, gradients, shapes) | No | Not a goal |
 | Clipboard history | No | Dedicated apps do it, and it means reading user data |
 | Calendar | No | macOS has it, and it means reading user data |
