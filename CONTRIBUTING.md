@@ -1,6 +1,7 @@
 # Contributing to Usherette
 
-Thanks for wanting to help. Bugs, ideas and new features are all welcome.
+Thanks for wanting to help. Bugs, ideas and new features are all welcome. Everyone taking part
+is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Before you start
 - **Found a bug or have an idea?** Open an

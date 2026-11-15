@@ -88,7 +88,8 @@ swift test --package-path Core
 
 ## Contributing
 Issues and pull requests are welcome: bugs, ideas and new features. Start with
-[CONTRIBUTING.md](CONTRIBUTING.md). To report a vulnerability, see [SECURITY.md](SECURITY.md).
+[CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). To report a
+vulnerability, see [SECURITY.md](SECURITY.md).
 
 ## License
 [Apache-2.0](LICENSE): you can use, modify and redistribute it, commercially too, as long as
