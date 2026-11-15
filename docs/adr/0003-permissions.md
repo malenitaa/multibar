@@ -38,8 +38,9 @@ explained before the system prompt appears.
   read anything.
 - With the module on, the user is trusting the code. It is open source and the module is
   isolated behind a port, so what it does with the permission can be read in one place.
-- Code that uses Accessibility lives only in the module's adapter; `./scripts/lint.sh` will
-  check that nothing else imports it once the module exists.
+- Code that uses Accessibility lives only in `App/Adapters/AccessibilityMenuBarIcons.swift`;
+  `./scripts/lint.sh` fails if any other file uses it, or if anything references a screen
+  capture API.
 - Spike #8 (`docs/spikes/0008-organizer.md`) showed on macOS 27.2 that the module can do its
   job with Accessibility alone, and that hiding icons needs no permission at all. If a later
   macOS breaks that, the answer is to drop the module, not to add Screen Recording.

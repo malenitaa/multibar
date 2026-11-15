@@ -12,7 +12,8 @@
 | Tests, one file per acceptance criterion | `Core/Tests/` |
 | Composition (wires the graph) | `App/UsheretteApp.swift` |
 | What the UI shows and the actions it can ask for | `App/UI/AppModel.swift` |
-| System adapters (`NSWorkspace`, `SMAppService`, icons) | `App/Adapters/` (created in stage 3) |
+| Other apps' menu bar icons (the only code that uses Accessibility) | `App/Adapters/AccessibilityMenuBarIcons.swift` |
+| The marker that hides icons | `App/UI/MenuBar/HidingMarker.swift` |
 | Menu bar icons and group strips | `App/UI/MenuBar/` |
 | Settings window | `App/UI/Settings/` |
 | Xcode project | generated from `project.yml` with `xcodegen generate` |
@@ -86,6 +87,14 @@ something goes, it is not yet clear what it is.
   the button title. For now each icon opens a plain menu; the strip comes with the items.
 - **Finding a way in:** the app has no Dock icon, so with no groups, or with something to
   report, the settings window opens at launch. Opening the app again also shows it.
+- **Hiding icons:** `HidingMarker` is a status item that, widened past the notch, pushes
+  everything on its left out of the bar (`HidingGeometry` has the rule). Group icons get a
+  seeded position at the right end the first time they are created, so they are never on the
+  hidden side.
+- **Opening a hidden icon:** `OpenMenuBarIcon` reveals, waits for the icon, presses it through
+  `AccessibilityMenuBarIcons`, waits for that app's new window to go away, and hides again.
+- **Trying it without touching the real configuration:** run the binary with
+  `USHERETTE_CONFIG_DIR=/some/folder`.
 - **The group's strip:** a borderless, non-activating `NSPanel` anchored under the group's
   status item, with one button per item; it closes when focus moves elsewhere.
 - **Dropping on the icon:** `NSStatusBarButton` is not meant to be subclassed; a transparent
@@ -112,3 +121,8 @@ something goes, it is not yet clear what it is.
 2. Drop an app from Finder on an icon: it appears in the menu with its icon.
 3. Click the item: the app opens.
 4. Quit and reopen Usherette: everything is the same.
+5. Turn on hiding, show the icons, ⌘-drag two icons to the left of the ‹ marker and stop
+   showing them: they leave the bar, and the group icons stay.
+6. With Accessibility allowed, add one of those apps to a group and pick it from the group's
+   menu: its icon comes back, its menu opens, and the icon leaves again when the menu closes.
+7. Quit Usherette: every icon is back where it was.

@@ -15,7 +15,7 @@
 | Version | Permission | Why |
 |---|---|---|
 | v1 (launcher groups) | None | Opening apps, files and URLs needs no special permission |
-| v2 (organizer), default | None | Hiding other apps' icons needs no permission |
+| Hiding other apps' icons | None | Done by widening a marker of Usherette's own |
 | v2 (organizer), optional module | Accessibility, only if you turn the module on | Needed to list other apps' real menu bar items and open their menus from a group. Off by default; everything else works without it |
 | Any version | Never Screen Recording | No feature may require it |
 

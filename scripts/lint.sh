@@ -14,6 +14,16 @@ if grep -rEn "import (AppKit|SwiftUI|ServiceManagement|ApplicationServices)" Cor
   echo "error: Core/Sources imports a framework it must not depend on (ADR 0002)" >&2
   exit 1
 fi
+# Accessibility is used in one adapter only, so what it does can be read in one place (ADR 0003).
+if grep -rln "AXUIElement\|AXIsProcessTrusted\|import ApplicationServices" Core App | grep -v "^App/Adapters/AccessibilityMenuBarIcons.swift$"; then
+  echo "error: the Accessibility API may only be used in App/Adapters/AccessibilityMenuBarIcons.swift (ADR 0003)" >&2
+  exit 1
+fi
+# Screen Recording is never used (ADR 0003).
+if grep -rEn "CGWindowListCreateImage|SCShareableContent|SCStream|CGDisplayStream|CGRequestScreenCaptureAccess" Core/Sources App; then
+  echo "error: screen capture API referenced; Usherette never uses Screen Recording (ADR 0003)" >&2
+  exit 1
+fi
 # Usherette never talks to the network (SPEC.md, section 4).
 if grep -rEn "URLSession|NWConnection|CFNetwork|import Network" Core/Sources App; then
   echo "error: networking API referenced; Usherette must not connect to anything (SPEC.md §4)" >&2
