@@ -19,6 +19,8 @@ final class AppModel {
     /// Whether hidden icons are shown for a moment so the user can move them around.
     private(set) var isArranging = false
 
+    /// True while icons are being dragged, so the marker is not widened under the pointer.
+    @ObservationIgnored private var isMovingIcons = false
     @ObservationIgnored var onGroupsChange: (() -> Void)?
     /// Called when something went wrong away from the settings window, which is where it is shown.
     @ObservationIgnored var onProblem: (() -> Void)?
@@ -31,6 +33,7 @@ final class AppModel {
     @ObservationIgnored private let addMenuBarIcon: AddMenuBarIcon
     @ObservationIgnored private let removeItem: RemoveItem
     @ObservationIgnored private let openMenuBarIcon: OpenMenuBarIcon
+    @ObservationIgnored private let arrangeMenuBarIcons: ArrangeMenuBarIcons
 
     init(store: any ConfigStore, icons: any MenuBarIcons, marker: HidingMarker) {
         self.store = store
@@ -41,6 +44,7 @@ final class AppModel {
         addMenuBarIcon = AddMenuBarIcon(store: store)
         removeItem = RemoveItem(store: store)
         openMenuBarIcon = OpenMenuBarIcon(icons: icons, hider: marker)
+        arrangeMenuBarIcons = ArrangeMenuBarIcons(icons: icons, hider: marker)
     }
 
     /// Whether this display lets icons be hidden at all.
@@ -61,6 +65,7 @@ final class AppModel {
         // The marker goes in first: group icons created after it are placed relative to it.
         applyHiding()
         onGroupsChange?()
+        hideMisplacedIcons()
     }
 
     /// Returns whether the group was created; `errorMessage` says why when it was not.
@@ -90,17 +95,26 @@ final class AppModel {
     }
 
     func add(_ app: MenuBarApp, to group: Group) {
-        change { try addMenuBarIcon(app, toGroup: group.id, in: configuration) }
+        if change({ try addMenuBarIcon(app, toGroup: group.id, in: configuration) }) {
+            arrange(hide: [app.bundleID])
+        }
     }
 
     func remove(_ item: Item, from group: Group) {
-        change { try removeItem(item.id, fromGroup: group.id, in: configuration) }
+        guard change({ try removeItem(item.id, fromGroup: group.id, in: configuration) }) else { return }
+        // An icon no group holds any more has no reason to stay hidden.
+        if item.kind == .menuBarIcon, let bundleID = item.bundleID, !configuration.menuBarIconBundleIDs.contains(bundleID) {
+            arrange(show: [bundleID])
+        }
     }
 
     func setHidesIcons(_ hidesIcons: Bool) {
         isArranging = false
         if change({ try setIconHiding(hidesIcons, in: configuration) }) {
             applyHiding()
+            if hidesIcons {
+                arrange(hide: configuration.menuBarIconBundleIDs, after: .milliseconds(300))
+            }
         }
     }
 
@@ -130,6 +144,36 @@ final class AppModel {
 
     // MARK: Private
 
+    /// Moves icons to the side of the marker they belong on, if hiding is on. Says which ones
+    /// would not move; an app that is not running is left for when it is.
+    private func arrange(hide: [String] = [], show: [String] = [], after delay: Duration = .zero) {
+        guard configuration.hidesIcons, icons.isPermitted, !(hide.isEmpty && show.isEmpty) else { return }
+        Task {
+            try? await Task.sleep(for: delay)
+            // A marker that was just created needs a moment before it knows where it is.
+            for _ in 0..<15 where marker.markerFrame == nil && !marker.isHiding {
+                try? await Task.sleep(for: .milliseconds(200))
+            }
+            // One set of drags at a time: wait for the previous one to finish.
+            while isMovingIcons {
+                try? await Task.sleep(for: .milliseconds(200))
+            }
+            guard configuration.hidesIcons else { return }
+            isMovingIcons = true
+            let result = try? await arrangeMenuBarIcons(hide: hide, show: show)
+            isMovingIcons = false
+            // The marker may not have been hiding yet when the icons were moved.
+            applyHiding()
+            guard let outcome = result else { return }
+            refreshMenuBarApps()
+            guard !outcome.failed.isEmpty else { return }
+            let names = outcome.failed.map { bundleID in menuBarApps.first { $0.bundleID == bundleID }?.name ?? bundleID }
+            errorMessage =
+                "Usherette could not move \(names.formatted(.list(type: .and))). "
+                + "Show the icons below and drag them by hand, holding ⌘."
+        }
+    }
+
     /// Runs a use case that returns the new configuration, and reports why if it fails.
     @discardableResult
     private func change(_ useCase: () throws -> Configuration) -> Bool {
@@ -146,6 +190,22 @@ final class AppModel {
         return false
     }
 
+    /// At launch, an app that is in a group may have its icon in view, for instance because
+    /// it was dragged there by hand. An icon that can be seen while the marker is hiding is on
+    /// the wrong side, so this needs no reveal, and nothing moves when all is in place.
+    private func hideMisplacedIcons() {
+        guard configuration.hidesIcons, icons.isPermitted, !configuration.menuBarIconBundleIDs.isEmpty else { return }
+        Task {
+            for _ in 0..<20 where !marker.isHiding {
+                try? await Task.sleep(for: .milliseconds(250))
+            }
+            // Icons take a moment to leave the bar once the marker widens.
+            try? await Task.sleep(for: .seconds(1))
+            guard marker.isHiding, !isMovingIcons else { return }
+            arrange(hide: configuration.menuBarIconBundleIDs.filter { icons.iconFrame(bundleID: $0) != nil })
+        }
+    }
+
     private func report(_ message: String) {
         errorMessage = message
         refreshMenuBarApps()
@@ -158,10 +218,13 @@ final class AppModel {
         if isArranging {
             marker.reveal()
         } else {
-            // A marker that was just created has no place in the bar yet; give macOS a moment.
+            // A marker that was just created has no place in the bar yet, and until it does it
+            // cannot be widened; keep trying for a few seconds.
             Task {
-                try? await Task.sleep(for: .milliseconds(600))
-                if configuration.hidesIcons, !isArranging { marker.hide() }
+                for _ in 0..<12 where configuration.hidesIcons && !isArranging && !isMovingIcons && !marker.isHiding {
+                    try? await Task.sleep(for: .milliseconds(300))
+                    if configuration.hidesIcons, !isArranging, !isMovingIcons { marker.hide() }
+                }
             }
         }
     }

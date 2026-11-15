@@ -5,6 +5,8 @@ import UsheretteCore
 @MainActor
 final class MenuBarController: NSObject {
     private var statusItems: [NSStatusItem] = []
+    /// The groups the current status items were made for, left to right.
+    private var shownGroups: [Group.ID] = []
     private var itemsByID: [String: Item] = [:]
     private let openSettings: () -> Void
     private let openItem: (Item) -> Void
@@ -15,14 +17,25 @@ final class MenuBarController: NSObject {
     }
 
     func show(_ groups: [Group]) {
+        itemsByID = Dictionary(groups.flatMap(\.items).map { ($0.id.uuidString, $0) }, uniquingKeysWith: { first, _ in first })
+
+        // Same groups in the same order: only what they show changed. Recreating the status
+        // items would make the whole bar shuffle for nothing.
+        if groups.map(\.id) == shownGroups {
+            for (item, group) in zip(statusItems, groups.reversed()) {
+                configure(item, for: group)
+            }
+            return
+        }
+
         for item in statusItems {
             NSStatusBar.system.removeStatusItem(item)
         }
-        itemsByID = Dictionary(groups.flatMap(\.items).map { ($0.id.uuidString, $0) }, uniquingKeysWith: { first, _ in first })
         keepNewGroupsVisible(groups)
         // macOS places each new status item to the left of the previous ones, so going through
         // the groups backwards makes the bar read in the order of the configuration.
         statusItems = groups.reversed().map(makeStatusItem)
+        shownGroups = groups.map(\.id)
     }
 
     /// A status item macOS has not seen before goes to the left end of the bar, which is the
@@ -48,18 +61,24 @@ final class MenuBarController: NSObject {
     private func makeStatusItem(for group: Group) -> NSStatusItem {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         item.autosaveName = Self.autosaveName(group)
+        configure(item, for: group)
+        return item
+    }
+
+    private func configure(_ item: NSStatusItem, for group: Group) {
         if let button = item.button {
             if let image = group.icon.symbolImage(accessibilityDescription: group.name) {
                 image.isTemplate = true
                 button.image = image
+                button.title = ""
             } else {
+                button.image = nil
                 button.title = group.icon.value
             }
             button.toolTip = group.name
             button.setAccessibilityLabel(group.name)
         }
         item.menu = makeMenu(for: group)
-        return item
     }
 
     private func makeMenu(for group: Group) -> NSMenu {

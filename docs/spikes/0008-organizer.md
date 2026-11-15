@@ -53,9 +53,24 @@ is moving icons programmatically.
   app's on-screen window numbers. A usage meter's popup showed up as one window for about two
   seconds; Maccy's panel stays until dismissed.
 
+## Found while arranging icons automatically (issue #19)
+- **Positions lie for a moment.** For about 400 ms after the marker narrows, both the
+  Accessibility position of other apps' icons and our own marker's window frame report places
+  from mid-rearrangement, off by tens of points. A drag aimed at them grabs the neighbouring
+  icon. `ArrangeMenuBarIcons` waits, then waits again until two readings agree.
+- **Whose icon is under the pointer can be asked.** `AXUIElementCopyElementAtPosition` on the
+  system-wide element returns an element owned by the app whose icon is there. The adapter
+  refuses to press unless that owner is the app it means to move.
+- **Recreating status items shuffles the bar.** Removing and adding our own group icons while
+  a drag was about to start moved things around; they are now only recreated when the groups
+  themselves change.
+- **macOS shows a « marker** at the left of the icons when some do not fit, which is the case
+  whenever Usherette is hiding. What clicking it does was not explored.
+- Other apps' icons were dragged this time (a usage meter, Maccy, Passwords), both ways,
+  several times, ending in the original order.
+
 ## Still open
-- **Arranging icons for the user** with the synthetic ⌘-drag above, so nobody has to drag
-  icons next to the marker by hand, and so profiles can change which ones are visible.
+- **Profiles** that change which of other apps' icons are visible, built on the same drag.
 - **Displays without a notch:** there is no notch edge to reach, and the rule for when macOS
   drops an oversized item there is not known.
 - **Teams, Docker, Discord and other apps** end to end, and what happens to an app whose icon

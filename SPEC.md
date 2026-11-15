@@ -68,7 +68,7 @@ Changing any of these requires an ADR.
 
 ## 5. Acceptance criteria
 One per capability. Tests live in `Core/Tests/`; the ones not yet implemented are marked as
-pending. Done so far: AC-1, AC-7, AC-8, AC-11, AC-12, AC-13, AC-14.
+pending. Done so far: AC-1, AC-7, AC-8, AC-11, AC-12, AC-13, AC-14, AC-15.
 
 | # | Given | When | Then | Test |
 |---|---|---|---|---|
@@ -86,6 +86,7 @@ pending. Done so far: AC-1, AC-7, AC-8, AC-11, AC-12, AC-13, AC-14.
 | AC-12 | Accessibility allowed and the "Work" group | I add a menu bar app from the list, twice | it is in the group once, remembered by the app it belongs to; without the permission nothing is listed | `AC12AddMenuBarIconTests` |
 | AC-13 | a hidden menu bar app in a group | I pick it from the group | its icon comes back, its own menu opens, and the icon hides again once the menu closes | `AC13OpenMenuBarIconTests` |
 | AC-14 | a menu bar app in a group that is not running | I pick it from the group | I am told, and the hidden icons end up hidden | `AC14MissingMenuBarIconTests` |
+| AC-15 | hiding is on and an app's icon is in view | I add the app to a group, or remove it from its last one | its icon is moved behind the marker, or back into view, without me dragging anything; other icons stay where they were | `AC15ArrangeMenuBarIconsTests` |
 
 Test levels (see `docs/DESIGN.md`):
 - **Unit** (always): domain with fakes for the ports. `swift test --package-path Core`.
@@ -110,6 +111,13 @@ Test levels (see `docs/DESIGN.md`):
 - **Hidden icon that was never seen:** an app whose icon is hidden cannot be listed until the
   icons have been shown once; the settings window says so.
 - **Opening one hidden icon shows all of them** for as long as its menu is open.
+- **Moving an icon takes the pointer for about a second:** Usherette makes the same ⌘-drag a
+  person would, and puts the pointer back. It never starts a drag unless the icon under the
+  pointer belongs to the app it means to move.
+- **An icon that will not move** after three tries is named in the settings window, and the
+  others are still handled.
+- **App in a group whose icon is in view at launch:** it is moved behind the marker; when
+  everything is already in place, nothing moves.
 - **Accessibility taken away while in use:** picking a menu bar app says the permission is
   needed, and nothing is revealed.
 

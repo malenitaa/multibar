@@ -46,9 +46,10 @@ hidden. Usherette organizes it by *context*:
 
 **v2 — organizer** (first slice working, see
 [#14](https://github.com/malenitaa/usherette/issues/14))
-- Hide other apps' icons and reach those apps from a group, with no permissions.
-- Optional: open other apps' real menu bar menus from a group. This one module asks for
-  Accessibility and is off unless you turn it on.
+- Hide other apps' icons behind a marker, with no permissions.
+- Optional: put another app's menu bar icon in a group. Usherette moves the icon out of the
+  bar for you and opens its menu from the group. This one module asks for Accessibility and is
+  off unless you turn it on.
 
 **Later**
 - A hotkey per group and search across your groups.

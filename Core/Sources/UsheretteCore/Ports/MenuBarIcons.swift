@@ -13,4 +13,10 @@ public protocol MenuBarIcons: AnyObject {
     func openMenu(bundleID: String) -> Bool
     /// Whether the menu opened by the last `openMenu` is still showing.
     func isMenuOpen(bundleID: String) -> Bool
+    /// Where that app's icon is, left to right in screen points. `nil` when it has none.
+    func iconFrame(bundleID: String) -> ClosedRange<Double>?
+    /// Holds ⌘ and drags that app's icon sideways until the pointer is at `x`, the way a
+    /// person would. Returns `false`, without touching anything, when the icon is missing or
+    /// is not where it was last seen, which happens while the bar is still rearranging.
+    func dragIcon(bundleID: String, toX x: Double) -> Bool
 }

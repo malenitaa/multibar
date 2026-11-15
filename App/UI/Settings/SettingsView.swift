@@ -130,7 +130,10 @@ private struct OtherIconsSection: View {
         } else if model.configuration.hidesIcons {
             Toggle("Show them for now, to move icons around", isOn: Binding(get: { model.isArranging }, set: { model.setArranging($0) }))
                 .accessibilityIdentifier("arrange-icons")
-            caption("While they are shown, hold ⌘ and drag any icon to the left of the ‹ marker to hide it, or to its right to keep it in view.")
+            caption(
+                "Apps you add to a group are moved behind the ‹ marker for you. To hide any other icon, show them, "
+                    + "hold ⌘ and drag it to the left of the marker."
+            )
         } else {
             caption("A small ‹ marker appears in the menu bar. Icons you drag to its left are kept out of the bar. This needs no permission.")
         }
