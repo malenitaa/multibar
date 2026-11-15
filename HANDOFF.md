@@ -39,6 +39,8 @@ timeline
 What is in and out compared with the reference product is in the parity table of `SPEC.md` §7.
 
 ## What was done (latest first)
+- 2026-11-15 · #21: a group opens as a strip of icons under the menu bar instead of a text
+  menu; a right-click gives Settings and Quit. AC-16, checked by hand.
 - 2026-11-15 · #19: icons are placed for the user. Adding a menu bar app to a group moves its
   icon behind the marker, removing it from its last group brings it back. AC-15 passes.
 - 2026-11-15 · App icon, code of conduct, issue forms, repository description and topics.
@@ -65,9 +67,8 @@ What is in and out compared with the reference product is in the parity table of
   license, 8 issues.
 
 ## What is next
-1. The group's strip of icons, replacing the plain menu.
-2. Stage 3: #3 (drop on the icon), #5 (open an item) and #4 (app checkboxes).
-3. Displays without a notch, Teams and other apps, macOS 26.
+1. Stage 3: #3 (drop on the icon), #5 (open an item) and #4 (app checkboxes).
+2. Displays without a notch, Teams and other apps, macOS 26.
 
 ## Decisions taken (open to veto)
 - **The main idea is the organizer:** a group opens a strip with other apps' real icons, and
@@ -85,8 +86,8 @@ What is in and out compared with the reference product is in the parity table of
   "anything else" (SPEC §3).
 - **Group icon = SF Symbol or emoji;** custom images come later. There is one text field:
   an emoji is kept as emoji, anything else is read as a symbol name.
-- **A group's icon opens a plain menu for now** (name, Settings, Quit); the strip arrives with
-  the items in stage 3.
+- **The strip has a settings button at its end,** and a right-click on the group icon gives
+  Settings and Quit. The strip wraps after eight icons.
 - **Group names can repeat;** only an empty name is refused.
 - **Docs and code in English.**
 - **Name: Usherette** for the app, the executable, the repository and the future Homebrew
@@ -99,7 +100,9 @@ What is in and out compared with the reference product is in the parity table of
 - Audio controls: low priority, only if a way that does not rely on a private API turns up.
 
 ## Known debts
-- No UI tests for the menu bar (end-to-end): manual check in `docs/DESIGN.md`.
+- No UI tests for the menu bar (end-to-end): manual check in `docs/DESIGN.md`. Checks made by
+  pressing controls through Accessibility miss bugs that only real mouse clicks show (the
+  strip not closing on a second click was one); post real click events when checking.
 - Hiding works only on a display with a notch.
 - Opening one hidden icon shows all the hidden ones while its menu is open, and the menu
   appears under the real icon, not under the group.

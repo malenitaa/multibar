@@ -68,7 +68,7 @@ Changing any of these requires an ADR.
 
 ## 5. Acceptance criteria
 One per capability. Tests live in `Core/Tests/`; the ones not yet implemented are marked as
-pending. Done so far: AC-1, AC-7, AC-8, AC-11, AC-12, AC-13, AC-14, AC-15.
+pending. Done so far: AC-1, AC-7, AC-8, AC-11, AC-12, AC-13, AC-14, AC-15, AC-16.
 
 | # | Given | When | Then | Test |
 |---|---|---|---|---|
@@ -87,6 +87,7 @@ pending. Done so far: AC-1, AC-7, AC-8, AC-11, AC-12, AC-13, AC-14, AC-15.
 | AC-13 | a hidden menu bar app in a group | I pick it from the group | its icon comes back, its own menu opens, and the icon hides again once the menu closes | `AC13OpenMenuBarIconTests` |
 | AC-14 | a menu bar app in a group that is not running | I pick it from the group | I am told, and the hidden icons end up hidden | `AC14MissingMenuBarIconTests` |
 | AC-15 | hiding is on and an app's icon is in view | I add the app to a group, or remove it from its last one | its icon is moved behind the marker, or back into view, without me dragging anything; other icons stay where they were | `AC15ArrangeMenuBarIconsTests` |
+| AC-16 | a group with items | I click its icon | a strip opens under it with one icon per item, in order; picking one closes the strip and opens the item; clicking anywhere else closes it; a right-click gives Settings and Quit | manual check in `docs/DESIGN.md` |
 
 Test levels (see `docs/DESIGN.md`):
 - **Unit** (always): domain with fakes for the ports. `swift test --package-path Core`.
@@ -96,7 +97,7 @@ Test levels (see `docs/DESIGN.md`):
 - **Evals and performance**: not applicable (no LLM, no numbers in this spec).
 
 ## 6. Edge cases and errors
-- **Group with no items:** the strip shows "Drop something here" and a link to settings.
+- **Group with no items:** the strip says "No items yet" and has the button to settings.
 - **Empty or whitespace-only name:** the group is not created.
 - **Compound emoji or unknown symbol:** the emoji is stored as is; an SF Symbol that does not
   exist on this macOS version is shown as a generic circle, without crashing.
@@ -104,7 +105,8 @@ Test levels (see `docs/DESIGN.md`):
 - **App that moved to another folder:** resolved by bundle id before path.
 - **Dropped thing that is not an app, file or folder** (text, an image dragged from a web
   page): ignored.
-- **Many items** (more than fit in one row): the strip wraps into more rows.
+- **Many items** (more than eight): the strip wraps into more rows.
+- **Item whose app is not installed:** shown in the strip with a placeholder icon.
 - **No room in the menu bar** (notch): macOS hides icons on its own; Usherette does not solve
   this in v1. Fewer icons in the bar, which is what v2 is about, is what helps.
 - **Display without a notch:** hiding is not offered there yet; the setting says so.
