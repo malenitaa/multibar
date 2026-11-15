@@ -113,5 +113,5 @@ What is in and out compared with the reference product is in the parity table of
 | Decisions | `docs/adr/` |
 | Internal design and design rules | `docs/DESIGN.md` |
 | Spike results | `docs/spikes/` |
-| For users and contributors | `README.md`, `CONTRIBUTING.md`, `SECURITY.md` |
+| For users and contributors | `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md` |
 | Issues | https://github.com/malenitaa/usherette/issues |
