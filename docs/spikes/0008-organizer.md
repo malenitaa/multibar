@@ -36,11 +36,28 @@ is moving icons programmatically.
 - **Profiles** that change which of *our* groups are shown need nothing. A profile that shows
   a different subset of other apps' icons in the bar needs to move icons across the separator.
 
+## Found while building the first slice (issue #14)
+- **When icons hide.** On the notch display, everything on the left of the marker leaves the
+  bar at the moment the marker's own left edge reaches the notch (848 pt on the test machine).
+  Narrower than that, icons only slide. `HidingGeometry` computes the length from the marker's
+  right edge and `NSScreen.auxiliaryTopRightArea`, and goes 120 pt past the notch.
+- **Moving icons programmatically works.** A synthetic ⌘-drag (mouse down, drags and up with
+  the Command flag, posted as HID events) moved Usherette's own marker across two other icons.
+  Posting events needs Accessibility. Other apps' icons were not dragged, on purpose.
+- **Where a new icon lands.** macOS puts a status item it has never seen at the left end of
+  the bar. `NSStatusItem Preferred Position <autosaveName>` in the app's defaults is read the
+  first time a name is seen (larger is further left; 1 and 2 put the group icons at the right
+  end); after that macOS remembers the place on its own and ignores the default. AppKit no
+  longer writes that key back.
+- **Seeing a menu open and close** needs no Screen Recording: the window list gives each
+  app's on-screen window numbers. A usage meter's popup showed up as one window for about two
+  seconds; Maccy's panel stays until dismissed.
+
 ## Still open
-- **Moving icons programmatically** (so the user does not have to ⌘-drag them next to the
-  separator, and so profiles can change which ones are visible). Existing managers do it with
-  synthetic ⌘-drag events; not tested here.
-- **Computing the hiding width** reliably across displays, with and without a notch.
+- **Arranging icons for the user** with the synthetic ⌘-drag above, so nobody has to drag
+  icons next to the marker by hand, and so profiles can change which ones are visible.
+- **Displays without a notch:** there is no notch edge to reach, and the rule for when macOS
+  drops an oversized item there is not known.
 - **Teams, Docker, Discord and other apps** end to end, and what happens to an app whose icon
   shows live status.
 - **macOS 26 and 15.**

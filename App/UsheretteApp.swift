@@ -18,11 +18,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        let store = JSONConfigStore(directory: JSONConfigStore.defaultDirectory)
-        let model = AppModel(store: store, createGroup: CreateGroup(store: store))
+        let store = JSONConfigStore(directory: Self.configDirectory)
+        let model = AppModel(store: store, icons: AccessibilityMenuBarIcons(), marker: HidingMarker())
         let settings = SettingsWindowController(model: model)
-        let menuBar = MenuBarController(openSettings: { settings.show() })
+        let menuBar = MenuBarController(openSettings: { settings.show() }, openItem: { model.open($0) })
         model.onGroupsChange = { [weak model] in menuBar.show(model?.configuration.groups ?? []) }
+        model.onProblem = { settings.show() }
         self.model = model
         self.menuBar = menuBar
         self.settings = settings
@@ -37,5 +38,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         settings?.show()
         return true
+    }
+
+    /// `USHERETTE_CONFIG_DIR` points the app at another folder, so it can be tried out without
+    /// touching the real configuration.
+    private static var configDirectory: URL {
+        ProcessInfo.processInfo.environment["USHERETTE_CONFIG_DIR"].map { URL(fileURLWithPath: $0, isDirectory: true) }
+            ?? JSONConfigStore.defaultDirectory
     }
 }

@@ -68,7 +68,7 @@ Changing any of these requires an ADR.
 
 ## 5. Acceptance criteria
 One per capability. Tests live in `Core/Tests/`; the ones not yet implemented are marked as
-pending. Done so far: AC-1, AC-7, AC-8.
+pending. Done so far: AC-1, AC-7, AC-8, AC-11, AC-12, AC-13, AC-14.
 
 | # | Given | When | Then | Test |
 |---|---|---|---|---|
@@ -82,6 +82,10 @@ pending. Done so far: AC-1, AC-7, AC-8.
 | AC-8 | a broken `config.json`, or one from an unknown version | I open Usherette | it is not overwritten: it is kept as `config.json.bak-<date>`, the app starts empty and says so | `AC08BrokenConfigTests` |
 | AC-9 | an item whose app or file no longer exists | I open the group | the item shows up disabled as "not found" and nothing crashes | `AC09MissingTargetTests` |
 | AC-10 | the "Launch at login" option | I turn it on and off | Usherette is registered and unregistered as a login item | `AC10LaunchAtLoginTests` |
+| AC-11 | icons placed on the left of Usherette's marker | I turn hiding on, and off again | they leave the menu bar and come back, with no permission asked; group icons are never hidden | `AC11HideIconsTests` |
+| AC-12 | Accessibility allowed and the "Work" group | I add a menu bar app from the list, twice | it is in the group once, remembered by the app it belongs to; without the permission nothing is listed | `AC12AddMenuBarIconTests` |
+| AC-13 | a hidden menu bar app in a group | I pick it from the group | its icon comes back, its own menu opens, and the icon hides again once the menu closes | `AC13OpenMenuBarIconTests` |
+| AC-14 | a menu bar app in a group that is not running | I pick it from the group | I am told, and the hidden icons end up hidden | `AC14MissingMenuBarIconTests` |
 
 Test levels (see `docs/DESIGN.md`):
 - **Unit** (always): domain with fakes for the ports. `swift test --package-path Core`.
@@ -102,6 +106,12 @@ Test levels (see `docs/DESIGN.md`):
 - **Many items** (more than fit in one row): the strip wraps into more rows.
 - **No room in the menu bar** (notch): macOS hides icons on its own; Usherette does not solve
   this in v1. Fewer icons in the bar, which is what v2 is about, is what helps.
+- **Display without a notch:** hiding is not offered there yet; the setting says so.
+- **Hidden icon that was never seen:** an app whose icon is hidden cannot be listed until the
+  icons have been shown once; the settings window says so.
+- **Opening one hidden icon shows all of them** for as long as its menu is open.
+- **Accessibility taken away while in use:** picking a menu bar app says the permission is
+  needed, and nothing is revealed.
 
 ## 7. Beyond v1
 Planned capabilities, in the order of the roadmap in `HANDOFF.md`. Acceptance criteria are

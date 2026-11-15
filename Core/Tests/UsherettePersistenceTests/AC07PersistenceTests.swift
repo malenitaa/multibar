@@ -36,6 +36,34 @@ struct AC07PersistenceTests {
         #expect(loaded.recovery == nil)
     }
 
+    @Test("given hiding turned on and another app's menu bar icon in a group, when I save and load again, then both are kept")
+    func organizerSettings() throws {
+        let directory = try TemporaryDirectory()
+        defer { directory.remove() }
+        let icon = Item(name: "Claude Usage", kind: .menuBarIcon, target: "", bundleID: "com.example.usage")
+        let configuration = Configuration(
+            groups: [Group(name: "Work", icon: GroupIcon(kind: .emoji, value: "🌈"), items: [icon])],
+            hidesIcons: true
+        )
+
+        try JSONConfigStore(directory: directory.url).save(configuration)
+
+        #expect(try JSONConfigStore(directory: directory.url).load().configuration == configuration)
+    }
+
+    @Test("given a file written before hiding existed, when I load, then hiding is off and nothing is set aside")
+    func fileWithoutHidingField() throws {
+        let directory = try TemporaryDirectory()
+        defer { directory.remove() }
+        let store = JSONConfigStore(directory: directory.url)
+        try Data(#"{"version": 1, "groups": []}"#.utf8).write(to: store.fileURL)
+
+        let loaded = try store.load()
+
+        #expect(loaded.configuration == .empty)
+        #expect(loaded.recovery == nil)
+    }
+
     @Test("given no configuration file yet, when I load, then the configuration is empty and nothing is reported")
     func firstLaunch() throws {
         let directory = try TemporaryDirectory()

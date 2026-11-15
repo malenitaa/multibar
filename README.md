@@ -15,8 +15,9 @@ context.
           └─ Teams · Passwords · Windows VM
 ```
 
-> **Status: early development.** You can create groups and see them as icons in the menu
-> bar, and they are remembered. Groups cannot hold anything yet. Follow the
+> **Status: early development.** You can create groups, hide other apps' icons behind a
+> marker, put a menu bar app in a group and open its menu from there (on a display with a
+> notch). Groups cannot hold apps, files or URLs to launch yet. Follow the
 > [roadmap](HANDOFF.md#roadmap) or pick an [issue](https://github.com/malenitaa/usherette/issues).
 
 ## Why another menu bar app
@@ -39,8 +40,8 @@ hidden. Usherette organizes it by *context*:
 - Reorder and remove; everything is remembered across restarts.
 - Optional launch at login.
 
-**v2 — organizer** (under investigation, see
-[#8](https://github.com/malenitaa/usherette/issues/8))
+**v2 — organizer** (first slice working, see
+[#14](https://github.com/malenitaa/usherette/issues/14))
 - Hide other apps' icons and reach those apps from a group, with no permissions.
 - Optional: open other apps' real menu bar menus from a group. This one module asks for
   Accessibility and is off unless you turn it on.

@@ -1,6 +1,6 @@
 # Usherette — handoff
 
-**Status:** groups can be created and show as icons in the menu bar, and are remembered; they cannot hold items yet · **Last updated:** 2026-11-15
+**Status:** groups show as icons; other apps' icons can be hidden behind a marker, added to a group and opened from it (notch displays, icons arranged by hand); no launcher items yet · **Last updated:** 2026-11-15
 **Language:** Swift 6 (see `docs/adr/0001-language.md`) · **Shape:** lightweight hexagonal (`docs/adr/0002-hexagonal-shape.md`)
 **Run:** `xcodegen generate && open Usherette.xcodeproj` · **Tests:** `swift test --package-path Core` · **Lint:** `./scripts/lint.sh` · **Deploy:** none (desktop app: manual release)
 
@@ -39,6 +39,9 @@ timeline
 What is in and out compared with the reference product is in the parity table of `SPEC.md` §7.
 
 ## What was done (latest first)
+- 2026-11-15 · #14: first slice of the organizer. A marker hides the icons on its left with no
+  permission; with Accessibility, menu bar apps can be added to a group and opened from it.
+  AC-11 to AC-14 pass. Found that a synthetic ⌘-drag moves icons (`docs/spikes/0008-organizer.md`).
 - 2026-11-15 · #1: groups in the menu bar. `CreateGroup` use case, one status item per group,
   settings window to add groups, notice when the configuration was set aside. AC-1 passes.
 - 2026-11-15 · #2: configuration persistence. Domain types (`Configuration`, `Group`,
@@ -59,10 +62,11 @@ What is in and out compared with the reference product is in the parity table of
   license, 8 issues.
 
 ## What is next
-1. What spike #8 left open: moving icons programmatically, computing the hiding width, and
-   testing Teams and macOS 26.
-2. Stage 3: #3 (drop on the icon), #5 (open an item) and #4 (app checkboxes). The group's
-   strip of icons replaces the plain menu there.
+1. Arrange icons for the user: adding a menu bar app to a group should move its icon behind
+   the marker without any dragging by hand (the synthetic ⌘-drag works).
+2. The group's strip of icons, replacing the plain menu.
+3. Stage 3: #3 (drop on the icon), #5 (open an item) and #4 (app checkboxes).
+4. Displays without a notch, Teams and other apps, macOS 26.
 
 ## Decisions taken (open to veto)
 - **The main idea is the organizer:** a group opens a strip with other apps' real icons, and
@@ -95,6 +99,11 @@ What is in and out compared with the reference product is in the parity table of
 
 ## Known debts
 - No UI tests for the menu bar (end-to-end): manual check in `docs/DESIGN.md`.
+- Hiding works only on a display with a notch.
+- Opening one hidden icon shows all the hidden ones while its menu is open, and the menu
+  appears under the real icon, not under the group.
+- A locally built app is signed ad hoc, so macOS forgets its Accessibility permission on every
+  rebuild. A stable signing identity fixes that (stage 6).
 - Signed and notarized release: handled in stage 5.
 
 ## Where everything is
