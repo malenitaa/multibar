@@ -1,14 +1,14 @@
-## Qué cambia
-Dos o tres oraciones.
+## What changes
+Two or three sentences.
 
-## Decisiones tomadas
-Comportamientos visibles elegidos, con el ADR si lo hay. "Ninguna" es válido.
+## Decisions taken
+Visible behaviour you chose, with the ADR if there is one. "None" is valid.
 
-## Cómo se verificó
-- [ ] Suite completa: `swift test --package-path Core` y `./scripts/lint.sh` → resultado
-- [ ] Chequeo manual: …
+## How it was verified
+- [ ] Full suite: `swift test --package-path Core` and `./scripts/lint.sh` → result
+- [ ] Manual check: …
 
-## Sin verificar
-Lo que no se pudo probar y por qué.
+## Not verified
+What could not be tested and why.
 
 Closes #

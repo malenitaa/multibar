@@ -15,16 +15,16 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # 1. Lint y formato (incluye el chequeo de que Core no importe AppKit/SwiftUI, ADR 0002).
+      # 1. Lint and format (also checks that Core does not import AppKit/SwiftUI and that nothing uses the network).
       - name: Lint
         run: ./scripts/lint.sh
 
-      # 2. Unitarios + integración del almacén JSON (directorio temporal).
+      # 2. Unit tests + integration of the JSON store (temporary directory).
       - name: Tests
         run: swift test --package-path Core
 
-      # La app tiene que compilar aunque no haya UI tests (deuda anotada en docs/DISENO.md).
-      - name: Build de la app
+      # The app must build even though there are no UI tests (debt recorded in docs/DESIGN.md).
+      - name: Build the app
         run: |
           brew install xcodegen
           xcodegen generate

@@ -1,3 +1,3 @@
-// Adaptador del puerto ConfigStore: lee y escribe
-// ~/Library/Application Support/Multibar/config.json (CA-7, CA-8).
-// Todavía vacío.
+// Adapter for the ConfigStore port: reads and writes
+// ~/Library/Application Support/Multibar/config.json (AC-7, AC-8).
+// Still empty.

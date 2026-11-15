@@ -1,21 +1,23 @@
 ---
 name: Bug
-about: Algo que funciona distinto de lo que dice la spec o el README.
+about: Something that behaves differently from what the spec or the README says.
 labels: bug
 ---
 
-## Qué pasa
+## What happens
 
 …
 
-## Qué debería pasar
+## What should happen
 
-Según la spec (CA-n) o el README: …
+According to the spec (AC-n) or the README: …
 
-## Cómo reproducirlo
+## How to reproduce
 
 1. …
 
-## Test que lo prueba
+macOS version: … · Multibar version or commit: …
 
-El test que falla hoy y tiene que pasar cuando se arregle: `<archivo o comando>`.
+## Test that proves it
+
+The test that fails today and must pass once fixed, if you have one: `<file or command>`.

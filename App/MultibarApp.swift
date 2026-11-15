@@ -1,7 +1,7 @@
 import AppKit
 
-// Composición: el único lugar que arma adaptadores y casos de uso (ADR 0002).
-// Esqueleto: la app arranca sin íconos hasta que se implemente CA-1.
+// Composition: the only place that wires adapters and use cases (ADR 0002).
+// Skeleton: the app starts with no icons until AC-1 is implemented.
 @main
 final class AppDelegate: NSObject, NSApplicationDelegate {
     static func main() {
