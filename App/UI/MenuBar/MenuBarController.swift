@@ -1,13 +1,14 @@
 import AppKit
 import UsheretteCore
 
-/// Keeps one menu bar icon per group.
+/// Keeps one menu bar icon per group. A click opens the group's strip; a right-click opens a
+/// small menu with the settings window and Quit.
 @MainActor
 final class MenuBarController: NSObject {
     private var statusItems: [NSStatusItem] = []
-    /// The groups the current status items were made for, left to right.
-    private var shownGroups: [Group.ID] = []
-    private var itemsByID: [String: Item] = [:]
+    /// The groups the current status items were made for, in configuration order.
+    private var groups: [Group] = []
+    private let strip = GroupStripController()
     private let openSettings: () -> Void
     private let openItem: (Item) -> Void
 
@@ -17,11 +18,13 @@ final class MenuBarController: NSObject {
     }
 
     func show(_ groups: [Group]) {
-        itemsByID = Dictionary(groups.flatMap(\.items).map { ($0.id.uuidString, $0) }, uniquingKeysWith: { first, _ in first })
+        strip.close()
+        let sameGroups = groups.map(\.id) == self.groups.map(\.id)
+        self.groups = groups
 
         // Same groups in the same order: only what they show changed. Recreating the status
         // items would make the whole bar shuffle for nothing.
-        if groups.map(\.id) == shownGroups {
+        if sameGroups {
             for (item, group) in zip(statusItems, groups.reversed()) {
                 configure(item, for: group)
             }
@@ -35,7 +38,6 @@ final class MenuBarController: NSObject {
         // macOS places each new status item to the left of the previous ones, so going through
         // the groups backwards makes the bar read in the order of the configuration.
         statusItems = groups.reversed().map(makeStatusItem)
-        shownGroups = groups.map(\.id)
     }
 
     /// A status item macOS has not seen before goes to the left end of the bar, which is the
@@ -61,64 +63,60 @@ final class MenuBarController: NSObject {
     private func makeStatusItem(for group: Group) -> NSStatusItem {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         item.autosaveName = Self.autosaveName(group)
+        if let button = item.button {
+            button.target = self
+            button.action = #selector(clicked(_:))
+            button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        }
         configure(item, for: group)
         return item
     }
 
     private func configure(_ item: NSStatusItem, for group: Group) {
-        if let button = item.button {
-            if let image = group.icon.symbolImage(accessibilityDescription: group.name) {
-                image.isTemplate = true
-                button.image = image
-                button.title = ""
-            } else {
-                button.image = nil
-                button.title = group.icon.value
-            }
-            button.toolTip = group.name
-            button.setAccessibilityLabel(group.name)
+        guard let button = item.button else { return }
+        if let image = group.icon.symbolImage(accessibilityDescription: group.name) {
+            image.isTemplate = true
+            button.image = image
+            button.title = ""
+        } else {
+            button.image = nil
+            button.title = group.icon.value
         }
-        item.menu = makeMenu(for: group)
+        button.toolTip = group.name
+        button.setAccessibilityLabel(group.name)
+        button.identifier = NSUserInterfaceItemIdentifier(group.id.uuidString)
     }
 
-    private func makeMenu(for group: Group) -> NSMenu {
+    @objc private func clicked(_ sender: NSStatusBarButton) {
+        guard let group = groups.first(where: { $0.id.uuidString == sender.identifier?.rawValue }),
+            let item = statusItems.first(where: { $0.button === sender })
+        else { return }
+
+        let event = NSApp.currentEvent
+        if event?.type == .rightMouseUp || event?.modifierFlags.contains(.control) == true {
+            strip.close()
+            showMenu(for: group, from: item)
+        } else if let anchor = sender.window?.frame {
+            strip.toggle(group, under: anchor, on: sender.window?.screen, openItem: openItem, openSettings: openSettings)
+        }
+    }
+
+    /// Shows the menu the way a status item normally would, then takes it off again so the
+    /// next plain click goes back to the strip.
+    private func showMenu(for group: Group, from item: NSStatusItem) {
         let menu = NSMenu()
-        menu.addItem(disabledItem(group.name))
-        if group.items.isEmpty {
-            menu.addItem(disabledItem("No items yet"))
-        }
-        for item in group.items {
-            let menuItem = NSMenuItem(title: item.name, action: #selector(open(_:)), keyEquivalent: "")
-            menuItem.target = self
-            menuItem.representedObject = item.id.uuidString
-            menuItem.image = appIcon(for: item)
-            menu.addItem(menuItem)
-        }
+        let title = NSMenuItem(title: group.name, action: nil, keyEquivalent: "")
+        title.isEnabled = false
+        menu.addItem(title)
         menu.addItem(.separator())
         let settings = NSMenuItem(title: "Settings…", action: #selector(showSettings), keyEquivalent: ",")
         settings.target = self
         menu.addItem(settings)
         menu.addItem(NSMenuItem(title: "Quit Usherette", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
-        return menu
-    }
 
-    /// The icon of the app an item belongs to, taken from the app itself.
-    private func appIcon(for item: Item) -> NSImage? {
-        guard let bundleID = item.bundleID, let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) else { return nil }
-        let icon = NSWorkspace.shared.icon(forFile: url.path)
-        icon.size = NSSize(width: 16, height: 16)
-        return icon
-    }
-
-    private func disabledItem(_ title: String) -> NSMenuItem {
-        let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
-        item.isEnabled = false
-        return item
-    }
-
-    @objc private func open(_ sender: NSMenuItem) {
-        guard let id = sender.representedObject as? String, let item = itemsByID[id] else { return }
-        openItem(item)
+        item.menu = menu
+        item.button?.performClick(nil)
+        item.menu = nil
     }
 
     @objc private func showSettings() {

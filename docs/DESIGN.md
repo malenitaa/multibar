@@ -85,7 +85,8 @@ something goes, it is not yet clear what it is.
   macOS puts each new item to the left of the previous ones, so they are created last group
   first for the bar to read in configuration order. The icon is an
   `NSImage(systemSymbolName:)`, a plain circle if that symbol does not exist, or the emoji as
-  the button title. For now each icon opens a plain menu; the strip comes with the items.
+  the button title. A click opens the group's strip; a right-click, or a click with Control,
+  opens a small menu with the settings window and Quit.
 - **Finding a way in:** the app has no Dock icon, so with no groups, or with something to
   report, the settings window opens at launch. Opening the app again also shows it.
 - **Hiding icons:** `HidingMarker` is a status item that, widened past the notch, pushes
@@ -100,8 +101,11 @@ something goes, it is not yet clear what it is.
   `AccessibilityMenuBarIcons`, waits for that app's new window to go away, and hides again.
 - **Trying it without touching the real configuration:** run the binary with
   `USHERETTE_CONFIG_DIR=/some/folder`.
-- **The group's strip:** a borderless, non-activating `NSPanel` anchored under the group's
-  status item, with one button per item; it closes when focus moves elsewhere.
+- **The group's strip** (`GroupStripController`, `GroupStripView`): a borderless,
+  non-activating `NSPanel` centred under the group's icon, with one button per item and one
+  for settings. It never takes focus from the app in use. A global and a local mouse monitor
+  close it on a click anywhere else; watching mouse buttons needs no permission. Item icons
+  are the icons of the apps themselves, read from their bundles.
 - **Dropping on the icon:** `NSStatusBarButton` is not meant to be subclassed; a transparent
   subview that implements `NSDraggingDestination` and accepts `.fileURL` is added to it. If
   that does not work well, plan B is dropping on the settings window (see the AC-2 issue).
@@ -123,12 +127,14 @@ something goes, it is not yet clear what it is.
 ### Manual check before each release
 1. Create two groups in the settings window: two icons appear in the menu bar, in order.
    An unknown symbol name shows a circle; an empty name is refused with a message.
-2. Drop an app from Finder on an icon: it appears in the menu with its icon.
-3. Click the item: the app opens.
-4. Quit and reopen Usherette: everything is the same.
-5. With Accessibility allowed and hiding on, add two menu bar apps to groups: each icon is
+2. Click a group's icon: its strip opens under it; click elsewhere: it closes. Right-click
+   the icon: a menu with Settings and Quit.
+3. Drop an app from Finder on an icon: it appears in the strip with its icon (not built yet).
+4. Click the item: the app opens.
+5. Quit and reopen Usherette: everything is the same.
+6. With Accessibility allowed and hiding on, add two menu bar apps to groups: each icon is
    moved behind the marker by itself and leaves the bar; no other icon changes place, and the
    group icons stay. Remove one from its group: its icon comes back.
-6. With Accessibility allowed, add one of those apps to a group and pick it from the group's
-   menu: its icon comes back, its menu opens, and the icon leaves again when the menu closes.
-7. Quit Usherette: every icon is back where it was.
+7. With Accessibility allowed, add one of those apps to a group and pick it from the group's
+   strip: its icon comes back, its menu opens, and the icon leaves again when the menu closes.
+8. Quit Usherette: every icon is back where it was.
