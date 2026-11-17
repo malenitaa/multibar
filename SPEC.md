@@ -113,6 +113,9 @@ Test levels (see `docs/DESIGN.md`):
 - **Hidden icon that was never seen:** an app whose icon is hidden cannot be listed until the
   icons have been shown once; the settings window says so.
 - **Opening one hidden icon shows all of them** for as long as its menu is open.
+- **macOS's own « next to hidden icons:** while icons are hidden, macOS shows a «. Clicking
+  it shows them on the left, over the app's menus, until it is clicked again. Usherette does
+  not control it; the settings window explains it.
 - **Moving an icon takes the pointer for about a second:** Usherette makes the same ⌘-drag a
   person would, and puts the pointer back. It never starts a drag unless the icon under the
   pointer belongs to the app it means to move.

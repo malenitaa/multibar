@@ -16,12 +16,16 @@ final class AppModel {
     /// The apps known to have a menu bar icon. Empty without Accessibility. An icon that is
     /// hidden cannot be seen, so apps seen earlier stay listed while they keep running.
     private(set) var menuBarApps: [MenuBarApp] = []
+    /// True when macOS is not drawing Usherette's icons at all, so there is nothing to click.
+    private(set) var iconsBlockedByMacOS = false
     /// Whether hidden icons are shown for a moment so the user can move them around.
     private(set) var isArranging = false
 
     /// True while icons are being dragged, so the marker is not widened under the pointer.
     @ObservationIgnored private var isMovingIcons = false
     @ObservationIgnored var onGroupsChange: (() -> Void)?
+    /// Asks the menu bar whether the group icons are being drawn; `nil` when there are none.
+    @ObservationIgnored var groupIconsAreShown: (() -> Bool?)?
     /// Called when something went wrong away from the settings window, which is where it is shown.
     @ObservationIgnored var onProblem: (() -> Void)?
 
@@ -45,6 +49,8 @@ final class AppModel {
         removeItem = RemoveItem(store: store)
         openMenuBarIcon = OpenMenuBarIcon(icons: icons, hider: marker)
         arrangeMenuBarIcons = ArrangeMenuBarIcons(icons: icons, hider: marker)
+        // Clicking the marker puts the icons away, the same as unticking "show them" in settings.
+        marker.onClick = { [weak self] in self?.setArranging(false) }
     }
 
     /// Whether this display lets icons be hidden at all.
@@ -72,6 +78,19 @@ final class AppModel {
     @discardableResult
     func addGroup(name: String, iconText: String) -> Bool {
         change { try createGroup(name: name, icon: GroupIcon(text: iconText), in: configuration) }
+    }
+
+    /// Looks, a moment from now, at whether macOS is drawing the group icons, and brings up the
+    /// settings window if it is not: with no icon in the bar it is the only way in.
+    func checkIconsAreShown() {
+        Task {
+            // The icons get their place a little after they are created.
+            try? await Task.sleep(for: .milliseconds(1500))
+            let blocked = groupIconsAreShown?() == false
+            let changed = blocked != iconsBlockedByMacOS
+            iconsBlockedByMacOS = blocked
+            if blocked, changed { onProblem?() }
+        }
     }
 
     // MARK: Other apps' icons
@@ -127,6 +146,14 @@ final class AppModel {
             try? await Task.sleep(for: .milliseconds(700))
             refreshMenuBarApps()
         }
+    }
+
+    /// What the group menu offers about hidden icons right now, if hiding is on.
+    var hiddenIconsAction: (title: String, run: () -> Void)? {
+        guard configuration.hidesIcons else { return nil }
+        return isArranging
+            ? ("Hide Icons Again", { [weak self] in self?.setArranging(false) })
+            : ("Show Hidden Icons", { [weak self] in self?.setArranging(true) })
     }
 
     func open(_ item: Item) {

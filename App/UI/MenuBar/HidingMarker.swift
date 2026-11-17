@@ -4,9 +4,20 @@ import UsheretteCore
 /// A status item of our own that, widened, pushes the icons on its left out of the menu bar.
 /// Needs no permission. See `docs/spikes/0008-organizer.md` for why this works.
 @MainActor
-final class HidingMarker: IconHider {
-    static let autosaveName = "icon-marker"
+final class HidingMarker: NSObject, IconHider {
     private static let narrowLength: CGFloat = 12
+
+    /// Called when the user clicks the marker while it is showing.
+    var onClick: (() -> Void)?
+    /// The name macOS remembers the marker's place by.
+    private let autosaveName: String
+    /// Where a marker macOS has never seen goes; `nil` leaves it at the left end.
+    private let firstPosition: Double?
+
+    init(autosaveName: String = "icon-marker", firstPosition: Double? = nil) {
+        self.autosaveName = autosaveName
+        self.firstPosition = firstPosition
+    }
 
     private var item: NSStatusItem?
     private(set) var isHiding = false
@@ -27,9 +38,15 @@ final class HidingMarker: IconHider {
     /// nothing is on its left until the user drags icons there.
     func setInstalled(_ installed: Bool) {
         if installed, item == nil {
+            let positionKey = "NSStatusItem Preferred Position \(autosaveName)"
+            if let firstPosition, UserDefaults.standard.object(forKey: positionKey) == nil {
+                UserDefaults.standard.set(firstPosition, forKey: positionKey)
+            }
             let item = NSStatusBar.system.statusItem(withLength: Self.narrowLength)
-            item.autosaveName = Self.autosaveName
-            item.button?.toolTip = "Usherette hides the icons on the left of this marker. Hold ⌘ and drag icons across it."
+            item.autosaveName = autosaveName
+            item.button?.toolTip = "Click to hide the icons on the left of this marker. Hold ⌘ and drag icons across it to choose which."
+            item.button?.target = self
+            item.button?.action = #selector(clicked)
             self.item = item
             showGlyph(true)
         } else if !installed, let item {
@@ -62,6 +79,10 @@ final class HidingMarker: IconHider {
         item.length = Self.narrowLength
         showGlyph(true)
         isHiding = false
+    }
+
+    @objc private func clicked() {
+        onClick?()
     }
 
     private func showGlyph(_ visible: Bool) {

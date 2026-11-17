@@ -9,6 +9,9 @@ struct SettingsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+            if model.iconsBlockedByMacOS {
+                BlockedIconsNotice()
+            }
             if let notice = model.notice {
                 Label(notice, systemImage: "exclamationmark.triangle")
                     .foregroundStyle(.orange)
@@ -32,6 +35,7 @@ struct SettingsView: View {
         .onAppear { model.refreshMenuBarApps() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             model.refreshMenuBarApps()
+            model.checkIconsAreShown()
         }
     }
 
@@ -70,6 +74,31 @@ struct SettingsView: View {
             name = ""
             iconText = ""
         }
+    }
+}
+
+/// Shown when macOS is not drawing any of Usherette's icons.
+private struct BlockedIconsNotice: View {
+    /// The Menu Bar pane of System Settings.
+    private static let menuBarSettings = URL(string: "x-apple.systempreferences:com.apple.ControlCenter-Settings.extension")
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("macOS is not showing Usherette's icons in the menu bar.", systemImage: "exclamationmark.triangle")
+                .foregroundStyle(.orange)
+            Text(
+                "Open System Settings, go to Menu Bar and check that Usherette is allowed. "
+                    + "If it already is, switch it off and on again, then quit and reopen Usherette."
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+            Button("Open Menu Bar Settings…") {
+                if let url = Self.menuBarSettings { NSWorkspace.shared.open(url) }
+            }
+            .accessibilityIdentifier("open-menu-bar-settings")
+        }
+        .accessibilityIdentifier("blocked-icons-notice")
     }
 }
 
@@ -132,7 +161,11 @@ private struct OtherIconsSection: View {
                 .accessibilityIdentifier("arrange-icons")
             caption(
                 "Apps you add to a group are moved behind the ‹ marker for you. To hide any other icon, show them, "
-                    + "hold ⌘ and drag it to the left of the marker."
+                    + "hold ⌘ and drag it to the left of the marker, then click the marker to put them away."
+            )
+            caption(
+                "While icons are hidden, macOS shows a « in the menu bar. Clicking it shows them on the left, over the app's menus, "
+                    + "until you click it again. That is macOS, not Usherette."
             )
         } else {
             caption("A small ‹ marker appears in the menu bar. Icons you drag to its left are kept out of the bar. This needs no permission.")
